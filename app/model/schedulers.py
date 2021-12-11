@@ -15,7 +15,7 @@ class Weekday(Enum):
 
 
 @dataclass
-class ScheduleMixin:
+class Schedule:
     start: time
     end: time
     weekdays: Optional[List[Weekday]]
@@ -30,7 +30,7 @@ class ScheduleMixin:
         return self.start <= some_time <= self.end
 
 
-class LowerCostPowerSchedule(ScheduleMixin):
+class LowerCostPowerSchedule(Schedule):
 
     def is_low_cost(self) -> bool:
         now = datetime.now()

@@ -1,6 +1,18 @@
 from datetime import time
 from freezegun import freeze_time
-from app.model.schedulers import LowerCostPowerSchedule, Weekday
+from app.model.schedulers import LowerCostPowerSchedule, Weekday, Schedule
+
+
+class TestScheduleBaseClass:
+    def test_in_weekday(self):
+        weekday = 1  # TUE
+        schedule = Schedule(
+            start=time(0, 0),
+            end=time(1, 0),
+            weekdays=[Weekday.MONDAY, Weekday.FRIDAY]
+        )
+
+        assert not schedule.in_weekdays(weekday)
 
 
 @freeze_time("2021-12-11 10:00")  # saturday
