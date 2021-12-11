@@ -26,18 +26,21 @@ class Schedule:
                 return True
         return False
 
-    def in_schedule_time(self, some_time: time) -> bool:
-        return self.start <= some_time <= self.end
+    def in_schedule_time(self, time_to_check: time) -> bool:
+        return self.start <= time_to_check <= self.end
 
-
-class LowerCostPowerSchedule(Schedule):
-
-    def is_low_cost(self) -> bool:
-        now = datetime.now()
-
-        if not self.weekdays and self.in_schedule_time(now.time()):
+    def in_schedule(self, date_to_check: datetime) -> bool:
+        if not self.weekdays and self.in_schedule_time(date_to_check.time()):
             return True
-        if self.weekdays and self.in_schedule_time(now.time()):
-            if self.in_weekdays(now.weekday()):
+        if self.weekdays and self.in_schedule_time(date_to_check.time()):
+            if self.in_weekdays(date_to_check.weekday()):
                 return True
         return False
+
+
+class LowerCostPower(Schedule):
+    pass
+
+
+class WaterHeatSchedule(Schedule):
+    pass
