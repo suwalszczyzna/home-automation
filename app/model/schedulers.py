@@ -19,6 +19,7 @@ class Schedule:
     start: time
     end: time
     weekdays: Optional[List[Weekday]]
+    is_active: bool = True
 
     def in_weekdays(self, weekday: int) -> bool:
         for day in self.weekdays:
@@ -30,6 +31,9 @@ class Schedule:
         return self.start <= time_to_check <= self.end
 
     def in_schedule(self, date_to_check: datetime) -> bool:
+        if not self.is_active:
+            return False
+
         if not self.weekdays and self.in_schedule_time(date_to_check.time()):
             return True
         if self.weekdays and self.in_schedule_time(date_to_check.time()):
