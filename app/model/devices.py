@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional
 
 
@@ -33,3 +34,8 @@ class WaterTemp(Sensor):
 
 class COTemp(Sensor):
     pass
+
+
+class Devices(Enum):
+    WATER_HEATER = "water_heater"
+    COIL_VALVE = "coil_valve"
