@@ -15,7 +15,7 @@ def auto_mode():
         end=time(10, 0),
         weekdays=[Weekday.MONDAY, Weekday.TUESDAY]
     )
-    return AutoMode(schedule)
+    return AutoMode([schedule])
 
 
 auto_mode = auto_mode()
@@ -91,7 +91,7 @@ class TestAutoModeWithAdditionalScheduleChecking:
             weekdays=[Weekday.SATURDAY, Weekday.SUNDAY]
         )
 
-        auto_mode_op = AutoMode(schedule)
+        auto_mode_op = AutoMode([schedule])
         auto_mode_op.invoke(self.temp_config, check_schedule=True)
 
         turn_off.assert_has_calls([call(Devices.COIL_VALVE), call(Devices.WATER_HEATER)])
@@ -103,7 +103,7 @@ class TestAutoModeWithAdditionalScheduleChecking:
             weekdays=[Weekday.SATURDAY, Weekday.SUNDAY]
         )
 
-        auto_mode_op = AutoMode(schedule)
+        auto_mode_op = AutoMode([schedule])
         auto_mode_op.invoke(self.temp_config, check_schedule=True)
 
         turn_off.assert_called_with(Devices.COIL_VALVE)

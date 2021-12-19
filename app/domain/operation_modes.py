@@ -1,10 +1,11 @@
 import abc
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List
 
 from app.adapters import device_events
 from app.domain.devices import Devices
-from app.domain.schedulers import LowerCostPower
+from app.domain.schedulers import LowerCostPower, check_schedulers
 
 
 @dataclass
@@ -21,8 +22,8 @@ class OperationMode(abc.ABC):
 
 
 class AutoMode(OperationMode):
-    def __init__(self, lower_cost_power: LowerCostPower):
-        self.low_cost_power = lower_cost_power
+    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
+        self.schedules = lower_cost_power_schedulers
 
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False):
 
@@ -38,7 +39,7 @@ class AutoMode(OperationMode):
                 self.heater_turn_on(check_schedule)
 
     def heater_turn_on(self, check_schedule: bool):
-        is_lower_cost = self.low_cost_power.in_schedule(datetime.now())
+        is_lower_cost = check_schedulers(datetime.now(), self.schedules)
         if not check_schedule:
             device_events.turn_on(Devices.WATER_HEATER)
         elif check_schedule and is_lower_cost:
