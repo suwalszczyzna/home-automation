@@ -1,4 +1,4 @@
-from app import logger
+import logger
 from app.adapters.tuya import TuyaACL
 from app.domain.devices import Devices
 

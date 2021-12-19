@@ -2,7 +2,7 @@ import logging
 import sys
 from logging.handlers import TimedRotatingFileHandler
 
-from app import config
+import config
 
 FORMATTER = logging.Formatter(config.logging_format)
 LOG_FILE = config.log_filepath

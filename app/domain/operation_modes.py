@@ -1,6 +1,7 @@
 import abc
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
 from typing import List
 
 from app.adapters import device_events
@@ -13,6 +14,11 @@ class TempConfig:
     max_water_temp: float
     water_temp: float
     co_temp: float
+
+
+class Operation(Enum):
+    AUTO_MODE = "auto_mode"
+    AUTO_MODE_HEATER = "auto_mode_heater"
 
 
 class OperationMode(abc.ABC):
