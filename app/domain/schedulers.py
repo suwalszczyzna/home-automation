@@ -54,5 +54,5 @@ def check_schedulers(date_to_check: datetime, schedulers: List[Schedule]) -> boo
     return any([
         True
         for schedule in schedulers
-        if schedule.in_schedule(date_to_check)
+        if schedule.is_active and schedule.in_schedule(date_to_check)
     ])
