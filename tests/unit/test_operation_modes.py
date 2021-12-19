@@ -2,9 +2,9 @@ from datetime import time, datetime
 from unittest import mock
 from unittest.mock import call
 from freezegun import freeze_time
-from app.model.devices import Devices
-from app.model.operation_modes import AutoMode, TempConfig, AutoModeHeaterPriority
-from app.model.schedulers import LowerCostPower, Weekday
+from app.domain.devices import Devices
+from app.domain.operation_modes import AutoMode, TempConfig, AutoModeHeaterPriority
+from app.domain.schedulers import LowerCostPower, Weekday
 
 MAX_WATER_TEMP = 50.0
 

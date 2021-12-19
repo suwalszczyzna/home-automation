@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from app.adapters import device_events
-from app.model.devices import Devices
-from app.model.schedulers import LowerCostPower
+from app.domain.devices import Devices
+from app.domain.schedulers import LowerCostPower
 
 
 @dataclass

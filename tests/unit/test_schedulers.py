@@ -1,5 +1,5 @@
 from datetime import time, datetime
-from app.model.schedulers import Weekday, Schedule
+from app.domain.schedulers import Weekday, Schedule
 
 
 class TestScheduleBaseClass:

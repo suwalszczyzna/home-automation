@@ -1,6 +1,6 @@
 from app import logger
 from app.adapters.tuya import TuyaACL
-from app.model.devices import BasicDevice, Devices
+from app.domain.devices import Devices
 
 log = logger.get_logger("DeviceEvent")
 
