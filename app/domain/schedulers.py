@@ -48,3 +48,11 @@ class LowerCostPower(Schedule):
 
 class WaterHeatSchedule(Schedule):
     pass
+
+
+def check_schedulers(date_to_check: datetime, schedulers: List[Schedule]) -> bool:
+    return any([
+        True
+        for schedule in schedulers
+        if schedule.in_schedule(date_to_check)
+    ])
