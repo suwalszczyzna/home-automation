@@ -4,9 +4,11 @@ from datetime import datetime
 from enum import Enum
 from typing import List
 
-from app.adapters import device_events
+import inject
+
 from app.domain.devices import Devices
 from app.domain.schedulers import LowerCostPower, check_schedulers
+from app.domain.actions.change_device_status import DeviceStatus
 
 
 @dataclass
@@ -28,37 +30,43 @@ class OperationMode(abc.ABC):
 
 
 class AutoMode(OperationMode):
-    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
+    @inject.autoparams('device_status')
+    def __init__(self, device_status: DeviceStatus, lower_cost_power_schedulers: List[LowerCostPower]):
         self.schedules = lower_cost_power_schedulers
+        self._device_status = device_status
 
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False):
 
         if temp_config.water_temp > temp_config.max_water_temp:
-            device_events.turn_off(Devices.COIL_VALVE)
-            device_events.turn_off(Devices.WATER_HEATER)
+            self._device_status.turn_off(Devices.COIL_VALVE.value)
+            self._device_status.turn_off(Devices.WATER_HEATER.value)
         else:
             if temp_config.water_temp < temp_config.co_temp:
-                device_events.turn_on(Devices.COIL_VALVE)
-                device_events.turn_off(Devices.WATER_HEATER)
+                self._device_status.turn_on(Devices.COIL_VALVE.value)
+                self._device_status.turn_off(Devices.WATER_HEATER.value)
             elif temp_config.water_temp >= temp_config.co_temp:
-                device_events.turn_off(Devices.COIL_VALVE)
+                self._device_status.turn_off(Devices.COIL_VALVE.value)
                 self.heater_turn_on(check_schedule)
 
     def heater_turn_on(self, check_schedule: bool):
         is_lower_cost = check_schedulers(datetime.now(), self.schedules)
         if not check_schedule:
-            device_events.turn_on(Devices.WATER_HEATER)
+            self._device_status.turn_on(Devices.WATER_HEATER.value)
         elif check_schedule and is_lower_cost:
-            device_events.turn_on(Devices.WATER_HEATER)
+            self._device_status.turn_on(Devices.WATER_HEATER.value)
         else:
-            device_events.turn_off(Devices.WATER_HEATER)
+            self._device_status.turn_off(Devices.WATER_HEATER.value)
 
 
 class AutoModeHeaterPriority(OperationMode):
+    @inject.autoparams()
+    def __init__(self, device_status: DeviceStatus):
+        self._device_status = device_status
+
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False):
         if temp_config.water_temp < temp_config.max_water_temp:
-            device_events.turn_off(Devices.COIL_VALVE)
-            device_events.turn_on(Devices.WATER_HEATER)
+            self._device_status.turn_off(Devices.COIL_VALVE.value)
+            self._device_status.turn_on(Devices.WATER_HEATER.value)
         elif temp_config.water_temp >= temp_config.max_water_temp:
-            device_events.turn_off(Devices.COIL_VALVE)
-            device_events.turn_off(Devices.WATER_HEATER)
+            self._device_status.turn_off(Devices.COIL_VALVE.value)
+            self._device_status.turn_off(Devices.WATER_HEATER.value)

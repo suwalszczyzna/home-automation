@@ -1,9 +1,10 @@
 from datetime import time
 from typing import List
 
-from app.domain.abstract_database import AbstractDatabase
+from app.domain.devices import Device
 from app.domain.operation_modes import Operation, TempConfig
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Weekday
+from app.domain.abstract_database import AbstractDatabase
 
 
 class FakeDatabase(AbstractDatabase):
@@ -29,3 +30,11 @@ class FakeDatabase(AbstractDatabase):
 
     def get_active_operation_mode(self) -> Operation:
         return Operation.AUTO_MODE
+
+    def get_device_by_name(self, name: str) -> Device:
+        return Device(
+            name="valve",
+            device_id="39209388",
+            ip_address="192.168.0.0",
+            local_key="d9839j98h"
+        )
