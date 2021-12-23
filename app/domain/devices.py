@@ -12,6 +12,12 @@ class Status(Enum):
     TURN_OFF = 0
 
 
+@dataclass
+class NewDeviceStatus:
+    device: Devices
+    status: Status
+
+
 @dataclass(frozen=True)
 class Device:
     name: str
