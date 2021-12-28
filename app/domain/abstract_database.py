@@ -35,3 +35,7 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def add_low_cost_power_schedule(self, schedule: LowerCostPower) -> None:
         pass
+
+    @abstractmethod
+    def add_device(self, device: Device):
+        pass

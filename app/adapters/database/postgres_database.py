@@ -142,6 +142,16 @@ class PostgresDB(AbstractDatabase):
             result = connection.execute(select).fetchone()
             return Operation(result[0]) if result else None
 
+    def add_device(self, device: Device):
+        with self.engine.begin() as connection:
+            insert = smart_devices.insert().values(
+                name=device.name,
+                device_id=device.device_id,
+                ip_address=device.ip_address,
+                local_key=device.local_key
+            )
+            connection.execute(insert)
+
     def get_device_by_name(self, name: str) -> Device:
         with self.engine.begin() as connection:
             select = smart_devices.select().where(smart_devices.c.name == name)
