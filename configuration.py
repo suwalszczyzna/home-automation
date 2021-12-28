@@ -11,8 +11,7 @@ from app.adapters.database.fake_database import FakeDatabase
 
 def configure_application(application: Flask) -> None:
     application.config.update(
-        # DATABASE_URI=os.getenv('DATABASE_URI')
-        DATABASE_URI="SOME_FAKE_DB_URI"
+        DATABASE_URI=os.getenv('DATABASE_URI')
     )
 
 
