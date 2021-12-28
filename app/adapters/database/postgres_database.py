@@ -1,12 +1,13 @@
 import uuid
 from typing import List
-from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, DateTime, Time, func, ForeignKey, Integer, Boolean
+from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, DateTime, Time, func, ForeignKey, Integer, \
+    Boolean, desc
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.domain.abstract_database import AbstractDatabase
 from app.domain.devices import Device
 from app.domain.operation_modes import Operation, TempConfig
-from app.domain.schedulers import LowerCostPower, WaterHeatSchedule
+from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule
 
 metadata = MetaData()
 
@@ -66,9 +67,30 @@ class PostgresDB(AbstractDatabase):
             max_water_temp_query = temp_config\
                 .select()\
                 .where(temp_config.c.config_name == 'max_water_temp')
+
+            max_water_temp_result = connection.execute(max_water_temp_query).fetchone()
+
             water_temp_query = temp_history\
                 .select()\
-                .where(temp_history.c.sensor == 'sensor_water')
+                .where(temp_history.c.sensor == 'sensor_water')\
+                .order_by(desc(temp_history.c.created))\
+                .limit(1)
+
+            water_temp_result = connection.execute(water_temp_query).fetchone()
+
+            co_temp_query = temp_history\
+                .select()\
+                .where(temp_history.c.sensor == 'sensor_co')\
+                .order_by(desc(temp_history.c.created))\
+                .limit(1)
+
+            co_temp_result = connection.execute(co_temp_query).fetchone()
+
+        return TempConfig(
+            max_water_temp=max_water_temp_result[1] if max_water_temp_result else 0.0,
+            water_temp=water_temp_result[2] if water_temp_result else 0.0,
+            co_temp=co_temp_result[2] if co_temp_result else 0.0,
+        )
 
     def get_water_heater_schedulers(self) -> List[WaterHeatSchedule]:
         pass
@@ -81,3 +103,29 @@ class PostgresDB(AbstractDatabase):
 
     def get_device_by_name(self, name: str) -> Device:
         pass
+
+    def _add_schedule(self, schedule: Schedule, schedule_type: str):
+        with self.engine.begin() as connection:
+            insert = schedules.insert()\
+                .values(
+                    schedule_type_id=schedule_type,
+                    start_time=schedule.start,
+                    stop_time=schedule.end,
+
+                )\
+                .returning(schedules.c.id)
+            result = connection.execute(insert)
+            schedule_new_id = result.fetchone()[0]
+
+            for weekday in schedule.weekdays:
+                schedule_day_insert = schedules_days.insert().values(
+                    schedule_id=schedule_new_id,
+                    weekday=weekday.value
+                )
+                connection.execute(schedule_day_insert)
+
+    def add_water_heater_schedule(self, schedule: WaterHeatSchedule) -> None:
+        self._add_schedule(schedule, 'water_heater')
+
+    def add_low_cost_power_schedule(self, schedule: LowerCostPower) -> None:
+        self._add_schedule(schedule, 'low_power_cost')

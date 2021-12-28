@@ -27,3 +27,11 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def get_device_by_name(self, name: str) -> Device:
         pass
+
+    @abstractmethod
+    def add_water_heater_schedule(self, schedule: WaterHeatSchedule) -> None:
+        pass
+
+    @abstractmethod
+    def add_low_cost_power_schedule(self, schedule: LowerCostPower) -> None:
+        pass
