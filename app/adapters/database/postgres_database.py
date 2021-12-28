@@ -137,7 +137,10 @@ class PostgresDB(AbstractDatabase):
         return result
 
     def get_active_operation_mode(self) -> Operation:
-        pass
+        with self.engine.begin() as connection:
+            select = operation_modes.select().where(operation_modes.c.active == True)
+            result = connection.execute(select).fetchone()
+            return Operation(result[0]) if result else None
 
     def get_device_by_name(self, name: str) -> Device:
         pass
