@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from app.domain.abstract_database import AbstractDatabase
 from app.domain.devices import Device
 from app.domain.operation_modes import Operation, TempConfig
-from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule
+from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday
 
 metadata = MetaData()
 
@@ -93,10 +93,48 @@ class PostgresDB(AbstractDatabase):
         )
 
     def get_water_heater_schedulers(self) -> List[WaterHeatSchedule]:
-        pass
+        result = []
+
+        with self.engine.begin() as connection:
+            schedules_query = schedules.select().where(schedules.c.schedule_type_id == 'water_heater')
+            schedules_rows = connection.execute(schedules_query)
+            for row in schedules_rows:
+                weekdays_query = schedules_days.select().where(schedules_days.c.schedule_id == row[0])
+                weekdays_rows = connection.execute(weekdays_query)
+                weekdays = []
+                for days in weekdays_rows:
+                    weekdays.append(Weekday(days[2]))
+
+                result_schedule = WaterHeatSchedule(
+                    start=row[2],
+                    end=row[3],
+                    weekdays=weekdays
+                )
+
+                result.append(result_schedule)
+        return result
 
     def get_low_cost_power_schedulers(self) -> List[LowerCostPower]:
-        pass
+        result = []
+
+        with self.engine.begin() as connection:
+            schedules_query = schedules.select().where(schedules.c.schedule_type_id == 'low_power_cost')
+            schedules_rows = connection.execute(schedules_query)
+            for row in schedules_rows:
+                weekdays_query = schedules_days.select().where(schedules_days.c.schedule_id == row[0])
+                weekdays_rows = connection.execute(weekdays_query)
+                weekdays = []
+                for days in weekdays_rows:
+                    weekdays.append(Weekday(days[2]))
+
+                result_schedule = LowerCostPower(
+                    start=row[2],
+                    end=row[3],
+                    weekdays=weekdays
+                )
+
+                result.append(result_schedule)
+        return result
 
     def get_active_operation_mode(self) -> Operation:
         pass
