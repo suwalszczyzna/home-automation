@@ -143,7 +143,16 @@ class PostgresDB(AbstractDatabase):
             return Operation(result[0]) if result else None
 
     def get_device_by_name(self, name: str) -> Device:
-        pass
+        with self.engine.begin() as connection:
+            select = smart_devices.select().where(smart_devices.c.name == name)
+            result = connection.execute(select).fetchone()
+            if result:
+                return Device(
+                    name=result[1],
+                    device_id=result[2],
+                    ip_address=result[3],
+                    local_key=result[4]
+                )
 
     def _add_schedule(self, schedule: Schedule, schedule_type: str):
         with self.engine.begin() as connection:
