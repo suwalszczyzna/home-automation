@@ -20,7 +20,8 @@ class TempSensor:
 
     @property
     def temperature(self):
-        return self.raw_value + self._sensor_config.get("temp_calibration_value")
+        temp = self.raw_value + self._sensor_config.get("temp_calibration_value")
+        return round(temp)
 
     def __repr__(self):
         return f"<TempSensor name={self.name} temperature={self.temperature}>"
