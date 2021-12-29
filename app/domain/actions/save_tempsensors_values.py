@@ -9,12 +9,12 @@ log = logger.get_logger("SaveTempsensorsValues")
 
 class SaveTempsensorsValues:
     @inject.autoparams()
-    def __init__(self, api: AbstractSensorApi, db: AbstractDatabase):
-        self._api = api
+    def __init__(self, sensor_api: AbstractSensorApi, db: AbstractDatabase):
+        self._sensor_api = sensor_api
         self._db = db
 
     def run(self):
-        sensors = self._api.get_all_sensors()
+        sensors = self._sensor_api.get_all_sensors()
         log.info("Got %s sensors", len(sensors))
         for sensor in sensors:
             log.info("Updating sensor: %s", sensor.__repr__())
