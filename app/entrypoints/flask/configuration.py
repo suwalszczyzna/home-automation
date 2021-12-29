@@ -5,8 +5,8 @@ from flask import Flask
 
 from app.adapters.api.fake_api import FakeAPI
 from app.adapters.database.postgres_database import PostgresDB
-from app.domain.abstract_database import AbstractDatabase
-from app.domain.abstract_device_api import AbstractDeviceAPI
+from app.domain.interfaces.abstract_database import AbstractDatabase
+from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 
 
 def configure_application(application: Flask) -> None:

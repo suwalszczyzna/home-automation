@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, Date
     Boolean, desc
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.domain.abstract_database import AbstractDatabase
+from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.devices import Device
 from app.domain.operation_modes import Operation, TempConfig
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday

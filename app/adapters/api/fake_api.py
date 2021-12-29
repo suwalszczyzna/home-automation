@@ -1,5 +1,5 @@
 import logger
-from app.domain.abstract_device_api import AbstractDeviceAPI
+from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 from app.domain.devices import Device, Status
 
 log = logger.get_logger("DeviceEvent")

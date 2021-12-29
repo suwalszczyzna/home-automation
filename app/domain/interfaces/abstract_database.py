@@ -4,12 +4,17 @@ from typing import List
 from app.domain.devices import Device
 from app.domain.operation_modes import TempConfig, Operation
 from app.domain.schedulers import WaterHeatSchedule, LowerCostPower
+from app.domain.sensors import TempSensor
 
 
 class AbstractDatabase(ABC):
 
     @abstractmethod
     def get_temp(self) -> TempConfig:
+        pass
+
+    @abstractmethod
+    def save_temp(self, sensor: TempSensor):
         pass
 
     @abstractmethod

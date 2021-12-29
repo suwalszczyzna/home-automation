@@ -2,8 +2,8 @@ from typing import List
 
 import inject
 
-from app.domain.abstract_database import AbstractDatabase
-from app.domain.abstract_device_api import AbstractDeviceAPI
+from app.domain.interfaces.abstract_database import AbstractDatabase
+from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 from app.domain.devices import NewDeviceStatus
 
 

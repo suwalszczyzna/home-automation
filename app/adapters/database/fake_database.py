@@ -4,7 +4,7 @@ from typing import List
 from app.domain.devices import Device
 from app.domain.operation_modes import Operation, TempConfig
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Weekday
-from app.domain.abstract_database import AbstractDatabase
+from app.domain.interfaces.abstract_database import AbstractDatabase
 
 
 class FakeDatabase(AbstractDatabase):
