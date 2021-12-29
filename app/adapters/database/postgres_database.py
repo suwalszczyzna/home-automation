@@ -68,6 +68,7 @@ class PostgresDB(AbstractDatabase):
         self.engine = create_engine(database_uri)
 
     def initialize_db(self):
+        metadata.drop_all(bind=self.engine)
         metadata.create_all(bind=self.engine)
 
         with self.engine.begin() as connection:
