@@ -98,11 +98,25 @@ class PostgresDB(AbstractDatabase):
 
     def save_temp(self, sensor: TempSensor):
         with self.engine.begin() as connection:
-            insert = temp_history.insert().values(
+            history_insert = temp_history.insert().values(
                 sensor=sensor.name,
                 temperature=sensor.temperature
             )
-            connection.execute(insert)
+            connection.execute(history_insert)
+
+            sensor_select = temp_config.select()\
+                .where(temp_config.c.config_name == sensor.name)
+            sensor_result = connection.execute(sensor_select).fetchone()
+            if sensor_result:
+                sensor_query = temp_config.update()\
+                    .where(temp_config.c.config_name == sensor.name)\
+                    .values(value=sensor.temperature)
+            else:
+                sensor_query = temp_config.insert().values(
+                    config_name=sensor.name,
+                    value=sensor.temperature
+                )
+            connection.execute(sensor_query)
 
     def get_water_heater_schedulers(self) -> List[WaterHeatSchedule]:
         result = []
