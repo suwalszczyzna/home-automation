@@ -4,10 +4,14 @@ from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, Date
     Boolean, desc
 from sqlalchemy.dialects.postgresql import UUID
 
+import logger
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.devices import Device
 from app.domain.operation_modes import Operation, TempConfig
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday
+from app.domain.sensors import TempSensor
+
+log = logger.get_logger("PostgresDB")
 
 metadata = MetaData()
 
@@ -91,6 +95,14 @@ class PostgresDB(AbstractDatabase):
             water_temp=water_temp_result[2] if water_temp_result else 0.0,
             co_temp=co_temp_result[2] if co_temp_result else 0.0,
         )
+
+    def save_temp(self, sensor: TempSensor):
+        with self.engine.begin() as connection:
+            insert = temp_history.insert().values(
+                sensor=sensor.name,
+                temperature=sensor.temperature
+            )
+            connection.execute(insert)
 
     def get_water_heater_schedulers(self) -> List[WaterHeatSchedule]:
         result = []

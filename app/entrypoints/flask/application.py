@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 from app.entrypoints.flask.configuration import configure_application, configure_inject
 from app.entrypoints.flask.mode_blueprint import create_mode_blueprint
+from app.entrypoints.flask.sensors_blueprint import create_sensors_blueprint
 
 
 def create_application() -> Flask:
@@ -12,6 +13,7 @@ def create_application() -> Flask:
     configure_inject(application)
 
     application.register_blueprint(create_mode_blueprint(), url_prefix='/api')
+    application.register_blueprint(create_sensors_blueprint(), url_prefix='/api')
 
     return application
 
