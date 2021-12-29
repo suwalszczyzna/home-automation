@@ -59,6 +59,7 @@ smart_devices = Table('smart_devices', metadata,
                       Column('device_id', Text, nullable=False),
                       Column('ip_address', Text, nullable=False),
                       Column('local_key', Text, nullable=False),
+                      Column('version', Float, nullable=False),
                       )
 
 
@@ -66,22 +67,75 @@ class PostgresDB(AbstractDatabase):
     def __init__(self, database_uri: str):
         self.engine = create_engine(database_uri)
 
+    def initialize_db(self):
+        metadata.create_all(bind=self.engine)
+
+        with self.engine.begin() as connection:
+            queries = [
+                temp_config.insert().values(
+                    config_name='max_water_temp',
+                    value=50
+                ),
+                operation_modes.insert().values([
+                    {'id': 'auto_mode',
+                     'name': 'Pełny automat',
+                     'active': True,
+                     'check_schedule': False},
+                    {'id': 'auto_mode_heater',
+                     'name': 'Priorytet grzałki',
+                     'active': False,
+                     'check_schedule': False},
+                ]),
+                schedules_types.insert().values([
+                    {'id': 'low_power_cost'},
+                    {'id': 'water_heater'}
+                ]),
+                smart_devices.insert().values(
+                    [{'name': 'water_heater',
+                      'device_id': '70050308600194b8cb32',
+                      'ip_address': '192.168.1.26',
+                      'local_key': 'a5dac5e5d5c4f941',
+                      'version': 3.1
+                      },
+                     {'name': 'window_bulb',
+                      'device_id': '115180622462ab51fad2',
+                      'ip_address': '192.168.1.30',
+                      'local_key': 'c888164e5b6697d1',
+                      'version': 3.3
+                      },
+                     {'name': 'valve',
+                      'device_id': 'bf80954079eb5cce8c7tlt',
+                      'ip_address': '192.168.1.34',
+                      'local_key': 'e4d05d3a39205d0b',
+                      'version': 3.3
+                      },
+                     {'name': 'bed_light',
+                      'device_id': '115180622462ab51f1d6',
+                      'ip_address': '192.168.1.29',
+                      'local_key': '1923b2570707e12a',
+                      'version': 3.3
+                      }]
+                )]
+
+            for q in queries:
+                connection.execute(q)
+
     def get_temp(self) -> TempConfig:
         with self.engine.begin() as connection:
-            max_water_temp_query = temp_config\
-                .select()\
+            max_water_temp_query = temp_config \
+                .select() \
                 .where(temp_config.c.config_name == 'max_water_temp')
 
             max_water_temp_result = connection.execute(max_water_temp_query).fetchone()
 
-            water_temp_query = temp_config\
-                .select()\
+            water_temp_query = temp_config \
+                .select() \
                 .where(temp_config.c.config_name == 'sensor_water')
 
             water_temp_result = connection.execute(water_temp_query).fetchone()
 
-            co_temp_query = temp_config\
-                .select()\
+            co_temp_query = temp_config \
+                .select() \
                 .where(temp_config.c.config_name == 'sensor_co')
 
             co_temp_result = connection.execute(co_temp_query).fetchone()
@@ -100,12 +154,12 @@ class PostgresDB(AbstractDatabase):
             )
             connection.execute(history_insert)
 
-            sensor_select = temp_config.select()\
+            sensor_select = temp_config.select() \
                 .where(temp_config.c.config_name == sensor.name)
             sensor_result = connection.execute(sensor_select).fetchone()
             if sensor_result:
-                sensor_query = temp_config.update()\
-                    .where(temp_config.c.config_name == sensor.name)\
+                sensor_query = temp_config.update() \
+                    .where(temp_config.c.config_name == sensor.name) \
                     .values(value=sensor.temperature)
             else:
                 sensor_query = temp_config.insert().values(
@@ -194,13 +248,13 @@ class PostgresDB(AbstractDatabase):
 
     def _add_schedule(self, schedule: Schedule, schedule_type: str):
         with self.engine.begin() as connection:
-            insert = schedules.insert()\
+            insert = schedules.insert() \
                 .values(
-                    schedule_type_id=schedule_type,
-                    start_time=schedule.start,
-                    stop_time=schedule.end,
+                schedule_type_id=schedule_type,
+                start_time=schedule.start,
+                stop_time=schedule.end,
 
-                )\
+            ) \
                 .returning(schedules.c.id)
             result = connection.execute(insert)
             schedule_new_id = result.fetchone()[0]
