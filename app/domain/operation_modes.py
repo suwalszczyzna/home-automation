@@ -14,6 +14,13 @@ class TempConfig:
     water_temp: float
     co_temp: float
 
+    def to_dict(self):
+        return {
+            'max_water_temp': self.max_water_temp,
+            'water_temp': self.water_temp,
+            'co_temp': self.co_temp
+        }
+
 
 class Operation(Enum):
     AUTO_MODE = "auto_mode"
