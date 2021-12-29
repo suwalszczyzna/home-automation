@@ -154,6 +154,12 @@ class PostgresDB(AbstractDatabase):
             result = connection.execute(select).fetchone()
             return Operation(result[0]) if result else None
 
+    def get_checking_schedule_status(self, operation: Operation) -> bool:
+        with self.engine.begin() as connection:
+            select = operation_modes.select().where(operation_modes.c.id == operation.name.lower())
+            result = connection.execute(select).fetchone()
+            return result[3] if result else False
+
     def add_device(self, device: Device):
         with self.engine.begin() as connection:
             insert = smart_devices.insert().values(

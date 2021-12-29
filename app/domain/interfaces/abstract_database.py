@@ -18,6 +18,10 @@ class AbstractDatabase(ABC):
         pass
 
     @abstractmethod
+    def get_checking_schedule_status(self, operation: Operation) -> bool:
+        pass
+
+    @abstractmethod
     def get_water_heater_schedulers(self) -> List[WaterHeatSchedule]:
         pass
 
