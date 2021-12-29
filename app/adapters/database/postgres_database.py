@@ -87,9 +87,9 @@ class PostgresDB(AbstractDatabase):
             co_temp_result = connection.execute(co_temp_query).fetchone()
 
         return TempConfig(
-            max_water_temp=max_water_temp_result[1] if max_water_temp_result else 0.0,
-            water_temp=water_temp_result[2] if water_temp_result else 0.0,
-            co_temp=co_temp_result[2] if co_temp_result else 0.0,
+            max_water_temp=max_water_temp_result[1] if max_water_temp_result else 0,
+            water_temp=water_temp_result[1] if water_temp_result else 0,
+            co_temp=co_temp_result[1] if co_temp_result else 0,
         )
 
     def save_temp(self, sensor: TempSensor):
