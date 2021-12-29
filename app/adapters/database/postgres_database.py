@@ -74,19 +74,15 @@ class PostgresDB(AbstractDatabase):
 
             max_water_temp_result = connection.execute(max_water_temp_query).fetchone()
 
-            water_temp_query = temp_history\
+            water_temp_query = temp_config\
                 .select()\
-                .where(temp_history.c.sensor == 'sensor_water')\
-                .order_by(desc(temp_history.c.created))\
-                .limit(1)
+                .where(temp_config.c.config_name == 'sensor_water')
 
             water_temp_result = connection.execute(water_temp_query).fetchone()
 
-            co_temp_query = temp_history\
+            co_temp_query = temp_config\
                 .select()\
-                .where(temp_history.c.sensor == 'sensor_co')\
-                .order_by(desc(temp_history.c.created))\
-                .limit(1)
+                .where(temp_config.c.config_name == 'sensor_co')
 
             co_temp_result = connection.execute(co_temp_query).fetchone()
 
