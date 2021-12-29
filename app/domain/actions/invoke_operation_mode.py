@@ -1,11 +1,12 @@
 import inject
 
+import logger
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.actions.change_device_status import ChangeDeviceStatus
 from app.domain.operation_modes import Operation, AutoMode, AutoModeHeaterPriority
 
 
-log = inject.logger.get_logger("InvokeOperationMode")
+log = logger.get_logger("InvokeOperationMode")
 
 
 class InvokeOperationMode:
