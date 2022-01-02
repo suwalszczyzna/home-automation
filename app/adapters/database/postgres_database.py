@@ -1,12 +1,14 @@
 import uuid
+from datetime import datetime
 from typing import List
+
 from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, DateTime, Time, func, ForeignKey, Integer, \
-    Boolean, desc
+    Boolean
 from sqlalchemy.dialects.postgresql import UUID
 
 import logger
-from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.devices import Device
+from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.operation_modes import Operation, TempConfig
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday
 from app.domain.sensors import TempSensor
@@ -24,7 +26,7 @@ temp_history = Table('temp_history', metadata,
                      Column('id', UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
                      Column('sensor', Text, nullable=False),
                      Column('temperature', Float, nullable=False),
-                     Column('created', DateTime, nullable=False, server_default=func.now())
+                     Column('created', DateTime, nullable=False)
                      )
 
 schedules_types = Table('schedules_types', metadata,
@@ -151,7 +153,8 @@ class PostgresDB(AbstractDatabase):
         with self.engine.begin() as connection:
             history_insert = temp_history.insert().values(
                 sensor=sensor.name,
-                temperature=sensor.temperature
+                temperature=sensor.temperature,
+                created=datetime.now()
             )
             connection.execute(history_insert)
 
