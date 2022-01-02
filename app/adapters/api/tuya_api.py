@@ -2,12 +2,12 @@ from tinytuya import OutletDevice
 
 import logger
 from app.domain.devices import Device, Status
-from app.domain.interfaces import abstract_device_api
+from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 
 log = logger.get_logger("TuyaAPI")
 
 
-class TuyaAPI(abstract_device_api):
+class TuyaAPI(AbstractDeviceAPI):
 
     def set_status(self, device: Device, status: Status):
         tuya_device = OutletDevice(
