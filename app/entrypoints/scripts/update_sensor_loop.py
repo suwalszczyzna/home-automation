@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from time import sleep
 
 import requests
@@ -16,6 +18,7 @@ def run_update_sensor():
 
 
 if __name__ == '__main__':
+    load_dotenv()
     while True:
         run_update_sensor()
-        sleep(10)
+        sleep(int(os.getenv('READ_SENSORS_INTERVAL')))
