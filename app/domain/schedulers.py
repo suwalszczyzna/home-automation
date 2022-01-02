@@ -28,7 +28,12 @@ class Schedule:
         return False
 
     def in_schedule_time(self, time_to_check: time) -> bool:
-        return self.start <= time_to_check <= self.end
+        if self.start <= self.end:
+            return self.start <= time_to_check <= self.end
+        else:
+            if self.start <= time_to_check and self.end < time_to_check:
+                return True
+        return False
 
     def in_schedule(self, date_to_check: datetime) -> bool:
         if not self.is_active:

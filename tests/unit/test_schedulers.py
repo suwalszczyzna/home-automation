@@ -17,6 +17,35 @@ class TestScheduleBaseClass:
 
         assert not schedule.in_weekdays(weekday)
 
+    def test_in_time(self):
+        time_to_check = time(9, 0)
+        schedule = Schedule(
+            start=time(8, 0),
+            end=time(10, 0),
+            weekdays=[Weekday.MONDAY, Weekday.FRIDAY]
+        )
+
+        assert schedule.in_schedule_time(time_to_check)
+
+        time_to_check = time(19, 0)
+        assert not schedule.in_schedule_time(time_to_check)
+
+    def test_in_time_when_start_gt_stop(self):
+        time_to_check = time(22, 30)
+        schedule = Schedule(
+            start=time(22, 0),
+            end=time(8, 0),
+            weekdays=[Weekday.MONDAY, Weekday.FRIDAY]
+        )
+
+        assert schedule.in_schedule_time(time_to_check)
+
+        time_to_check = time(21, 30)
+        assert not schedule.in_schedule_time(time_to_check)
+
+        time_to_check = time(9, 0)
+        assert not schedule.in_schedule_time(time_to_check)
+
     def test_schedule_without_weekdays(self):
         schedule = Schedule(
             start=time(7, 0),
