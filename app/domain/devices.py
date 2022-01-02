@@ -24,3 +24,4 @@ class Device:
     device_id: str
     ip_address: str
     local_key: str
+    version: str

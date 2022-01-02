@@ -247,7 +247,8 @@ class PostgresDB(AbstractDatabase):
                     name=result[1],
                     device_id=result[2],
                     ip_address=result[3],
-                    local_key=result[4]
+                    local_key=result[4],
+                    version=result[5]
                 )
 
     def _add_schedule(self, schedule: Schedule, schedule_type: str):
