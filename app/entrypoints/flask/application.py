@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 from app.entrypoints.flask.configuration import configure_application, configure_inject
@@ -10,6 +11,8 @@ from app.entrypoints.flask.routes.common import create_common_blueprint
 def create_application() -> Flask:
     load_dotenv()
     application = Flask(__name__)
+    CORS(application)
+
     configure_application(application)
     configure_inject(application)
 
