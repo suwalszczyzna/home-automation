@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<div id="temp" class="container mx-auto">
+    <h1 class="text-xl text-center">Home automation</h1>
+    <div class="flex flex-row justify-center">
+        <div class="p-4 m-2 bg-red-100 rounded-xl border border-red-300 shadow-md flex items-center">
+            <div class="pr-3">
+                <img class="w-15" src="icons/chimney.png" alt="Piec">
+            </div>
+            <div class="pr-3">
+                <h3>Piec</h3>
+                <p class="co-temp text-xl font-medium">{{ coTemp }} °C</p>
+            </div>
+        </div>
+        <div class="p-4 m-2 bg-sky-100 rounded-xl border border-sky-300 shadow-md flex items-center">
+            <div class="pr-3">
+                <img class="w-16" src="icons/water.png" alt="Piec">
+            </div>
+            <div class="pr-3">
+                <h3>Woda</h3>
+                <p class="co-temp text-xl font-medium">{{ waterTemp }} °C</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/vue@next"></script>
+<script src="app.js"></script>
+</body>
+</html>
