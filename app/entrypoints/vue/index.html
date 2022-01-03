@@ -8,25 +8,25 @@
 </head>
 <body>
 
-<div id="temp" class="container mx-auto">
-    <h1 class="text-xl text-center">Home automation</h1>
-    <div class="flex flex-row justify-center">
-        <div class="p-4 m-2 bg-red-100 rounded-xl border border-red-300 shadow-md flex items-center">
-            <div class="pr-3">
-                <img class="w-15" src="icons/chimney.png" alt="Piec">
+<div id="temp" class="container mx-auto min-h-screen font-light">
+    <h1 class="m-6 p-6 text-5xl text-center">Home automation</h1>
+    <div class="flex flex-row justify-center text-4xl">
+        <div class="grow p-3 m-2 bg-red-100 rounded-xl border border-red-300 shadow-md flex items-center">
+            <div class="p-3">
+                <img class="w-32" src="icons/chimney.png" alt="Piec">
             </div>
-            <div class="pr-3">
+            <div class="pl-3">
                 <h3>Piec</h3>
-                <p class="co-temp text-xl font-medium">{{ coTemp }} °C</p>
+                <p class="co-temp text-6xl">{{ coTemp }}°C</p>
             </div>
         </div>
-        <div class="p-4 m-2 bg-sky-100 rounded-xl border border-sky-300 shadow-md flex items-center">
-            <div class="pr-3">
-                <img class="w-16" src="icons/water.png" alt="Piec">
+        <div class="grow p-3 m-2 bg-sky-100 rounded-xl border border-sky-300 shadow-md flex items-center">
+            <div class="p-3">
+                <img class="w-32" src="icons/water.png" alt="Piec">
             </div>
-            <div class="pr-3">
+            <div class="pl-3">
                 <h3>Woda</h3>
-                <p class="co-temp text-xl font-medium">{{ waterTemp }} °C</p>
+                <p class="co-temp text-6xl">{{ waterTemp }}°C</p>
             </div>
         </div>
     </div>
