@@ -48,3 +48,11 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def add_device(self, device: Device):
         pass
+
+    @abstractmethod
+    def set_device_status(self, device_name: str, status: bool):
+        pass
+
+    @abstractmethod
+    def get_device_status(self, device_name: str) -> bool:
+        pass

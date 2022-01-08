@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, Date
 from sqlalchemy.dialects.postgresql import UUID
 
 import logger
-from app.domain.devices import Device
+from app.domain.devices import Device, Status
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.operation_modes import Operation, TempConfig
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday
@@ -62,6 +62,7 @@ smart_devices = Table('smart_devices', metadata,
                       Column('ip_address', Text, nullable=False),
                       Column('local_key', Text, nullable=False),
                       Column('version', Float, nullable=False),
+                      Column('last_status', Boolean, nullable=False, default=False),
                       )
 
 
@@ -276,3 +277,18 @@ class PostgresDB(AbstractDatabase):
 
     def add_low_cost_power_schedule(self, schedule: LowerCostPower) -> None:
         self._add_schedule(schedule, 'low_power_cost')
+
+    def set_device_status(self, device_name: str, status: Status):
+        with self.engine.begin() as connection:
+            update = smart_devices.update()\
+                    .where(smart_devices.c.name == device_name)\
+                    .values(last_status=status.value)
+            connection.execute(update)
+
+    def get_device_status(self, device_name: str) -> bool:
+        with self.engine.begin() as connection:
+            select = smart_devices.select()\
+                    .where(smart_devices.c.name == device_name)
+            result = connection.execute(select).fetchone()
+
+            return result[6] if result else False
