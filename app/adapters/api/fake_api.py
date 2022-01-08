@@ -6,5 +6,6 @@ log = logger.get_logger("DeviceEvent")
 
 
 class FakeAPI(AbstractDeviceAPI):
-    def set_status(self, device: Device, status: Status):
+    def set_status(self, device: Device, status: Status) -> bool:
         log.info("Device %s, status: %s", device.name, status.name)
+        return True
