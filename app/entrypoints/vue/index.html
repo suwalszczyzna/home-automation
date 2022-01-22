@@ -1,32 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-gray-100">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e5e7eb">
+    <link rel="manifest" href="manifest.webmanifest" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="icons/favicon.ico">
 </head>
 <body>
 
-<div id="temp" class="container mx-auto min-h-screen font-light">
-    <h1 class="m-6 p-6 text-5xl text-center">Home automation</h1>
+<div id="temp" class="container mx-auto min-h-screen font-light p-2">
+    <h1 class="m-6 p-2 text-3xl text-center tracking-wider uppercase font-medium text-gray-600">Home automation</h1>
+
+    <h2 class="p-2 mt-4 text-xl">Stan urządzeń</h2>
     <div class="flex flex-row justify-center text-4xl">
-        <div class="grow p-3 m-2 bg-red-100 rounded-xl border border-red-300 shadow-md flex items-center">
-            <div class="p-3">
-                <img class="w-32" src="icons/chimney.png" alt="Piec">
+        <div class="grow p-2 m-2 rounded-xl border flex justify-center items-center bg-gray-200 border-gray-300" v-bind:class="{ 'bg-green-100 border-green-300 text-lime-900 animate-pulse': valveStatus }">
+            <div class="p-1">
+                <img class="w-10" v-bind:class="{ devDisabled: !valveStatus }" src="icons/valve.png" alt="Piec">
             </div>
-            <div class="pl-3">
-                <h3>Piec</h3>
-                <p class="co-temp text-6xl">{{ coTemp }}°C</p>
+            <div class="ml-2">
+                <h3 class="text-lg leading-5">Zawór</h3>
+                <p class="co-temp text-xl leading-5">{{ valveStatusText }}</p>
             </div>
         </div>
-        <div class="grow p-3 m-2 bg-sky-100 rounded-xl border border-sky-300 shadow-md flex items-center">
-            <div class="p-3">
-                <img class="w-32" src="icons/water.png" alt="Piec">
+        <div class="grow p-2 m-2 rounded-xl border flex justify-center items-center bg-gray-200 border-gray-300" v-bind:class="{ 'bg-green-100 border-green-300 text-lime-900 animate-pulse': heaterStatus }">
+            <div class="p-1">
+                <img class="w-10" v-bind:class="{ devDisabled: !heaterStatus }" src="icons/heater_1.png" alt="Piec">
             </div>
-            <div class="pl-3">
-                <h3>Woda</h3>
-                <p class="co-temp text-6xl">{{ waterTemp }}°C</p>
+            <div class="ml-2 flex flex-col justify-center">
+                <h3 class="text-lg leading-5">Grzałka</h3>
+                <p class="co-temp text-xl leading-5"> {{ heaterStatusText }}</p>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="p-2 mt-4 text-xl">Temperatury</h2>
+    <div class="flex flex-row justify-center text-4xl">
+        <div class="grow p-3 m-2 bg-white rounded-xl border border-gray-300 flex items-center">
+            <div class="p-2">
+                <img class="w-10" src="icons/flame.png" alt="Piec">
+            </div>
+            <div class="pl-3 flex flex-col justify-center">
+                <h3 class="text-lg leading-5">Piec</h3>
+                <p class="co-temp text-2xl leading-6">{{ coTemp }}°C</p>
+            </div>
+        </div>
+        <div class="grow p-3 m-2 bg-white rounded-xl border border-gray-300 flex items-center">
+            <div class="p-2">
+                <img class="w-10" src="icons/water.png" alt="Piec">
+            </div>
+            <div class="pl-3 flex flex-col justify-center">
+                <h3 class="text-lg leading-5">Bojler</h3>
+                <p class="co-temp text-2xl leading-6">{{ waterTemp }}°C</p>
             </div>
         </div>
     </div>
