@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import List
 
 from app.domain.devices import Device
@@ -55,4 +56,8 @@ class AbstractDatabase(ABC):
 
     @abstractmethod
     def get_device_status(self, device_name: str) -> bool:
+        pass
+
+    @abstractmethod
+    def clean_temp_history(self, max_history_date: datetime) -> None:
         pass

@@ -292,3 +292,10 @@ class PostgresDB(AbstractDatabase):
             result = connection.execute(select).fetchone()
 
             return result[6] if result else False
+
+    def clean_temp_history(self, max_history_date: datetime) -> None:
+        with self.engine.begin() as connection:
+            delete = temp_history.delete()\
+                .where(temp_history.c.created < max_history_date)
+
+            connection.execute(delete)
