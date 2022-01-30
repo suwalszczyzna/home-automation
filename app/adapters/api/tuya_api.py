@@ -17,6 +17,7 @@ class TuyaAPI(AbstractDeviceAPI):
                 address=device.ip_address,
                 local_key=device.local_key
             )
+            tuya_device.set_socketTimeout(3)
             tuya_device.set_version(device.version)
             tuya_status = tuya_device.status()
             if tuya_status.get('Error'):
@@ -32,5 +33,5 @@ class TuyaAPI(AbstractDeviceAPI):
             log.info("Device: %s status successfully changed. Response: %s", device.name, response)
             return True
         except Exception as e:
-            log.info("Problem with TuyaAPI with device %s", device.name)
+            log.error("Problem with TuyaAPI with device %s", device.name, exc_info=e)
             return False
