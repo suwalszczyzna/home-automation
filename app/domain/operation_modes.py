@@ -1,4 +1,5 @@
 import abc
+import math
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
@@ -53,13 +54,13 @@ class AutoMode(OperationMode):
             )
 
         else:
-            if temp_config.water_temp < temp_config.co_temp:
+            if self.valve_should_turn_on(temp_config):
                 return new_statuses(
                     new_valve_status=Status.TURN_ON,
                     new_water_heater_status=Status.TURN_OFF
                 )
 
-            elif temp_config.water_temp >= temp_config.co_temp:
+            else:
                 return new_statuses(
                     new_valve_status=Status.TURN_OFF,
                     new_water_heater_status=self.heater_turn_on(check_schedule)
@@ -72,6 +73,15 @@ class AutoMode(OperationMode):
             return Status.TURN_ON
 
         return Status.TURN_OFF
+
+    def temp_diff_water_vs_co(self, temp_config: TempConfig) -> int:
+        return temp_config.co_temp - temp_config.water_temp
+
+    def valve_should_turn_on(self, temp_config: TempConfig) -> bool:
+        co_gt_water = temp_config.water_temp < temp_config.co_temp
+        co_gt_min = 40 < temp_config.co_temp
+
+        return co_gt_min and co_gt_water and self.temp_diff_water_vs_co(temp_config) >= 5
 
 
 class AutoModeHeaterPriority(OperationMode):
