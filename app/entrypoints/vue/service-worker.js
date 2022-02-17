@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.016e73e2a6d2ec430d519c80464f3216.js"
+  "/precache-manifest.2784059ca02ae55fb9be853b33858c0a.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "home-automation-gui"});
