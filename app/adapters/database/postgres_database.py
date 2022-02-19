@@ -299,12 +299,12 @@ class PostgresDB(AbstractDatabase):
             for o in Operation:
                 connection.execute(
                     operation_modes.update()\
-                    .where(operation_modes.c.name == o.value)\
+                    .where(operation_modes.c.id == o.value)\
                     .values(active=False)
                 )
 
             update = operation_modes.update()\
-                    .where(operation_modes.c.name == operation.value)\
+                    .where(operation_modes.c.id == operation.value)\
                     .values(active=True)
 
             connection.execute(update)
@@ -312,7 +312,7 @@ class PostgresDB(AbstractDatabase):
     def set_low_cost_checking(self, operation: Operation, value: bool) -> None:
         with self.engine.begin() as connection:
             update = operation_modes.update()\
-                    .where(operation_modes.c.name == operation.value)\
+                    .where(operation_modes.c.id == operation.value)\
                     .values(active=True, check_schedule=value)
 
             connection.execute(update)
