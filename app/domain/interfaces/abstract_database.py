@@ -34,6 +34,14 @@ class AbstractDatabase(ABC):
         pass
 
     @abstractmethod
+    def set_active_operation_mode(self, operation: Operation) -> None:
+        pass
+    
+    @abstractmethod
+    def set_low_cost_checking(self, operation: Operation, value: bool) -> None:
+        pass
+
+    @abstractmethod
     def get_device_by_name(self, name: str) -> Device:
         pass
 

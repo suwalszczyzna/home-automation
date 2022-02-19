@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from typing import List
+from webbrowser import Opera
 
 from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, DateTime, Time, func, ForeignKey, Integer, \
     Boolean
@@ -292,3 +293,26 @@ class PostgresDB(AbstractDatabase):
             result = connection.execute(select).fetchone()
 
             return result[6] if result else False
+
+    def set_active_operation_mode(self, operation: Operation) -> None:
+        with self.engine.begin() as connection:
+            for o in Operation:
+                connection.execute(
+                    operation_modes.update()\
+                    .where(operation_modes.c.name == o.value)\
+                    .values(active=False)
+                )
+
+            update = operation_modes.update()\
+                    .where(operation_modes.c.name == operation.value)\
+                    .values(active=True)
+
+            connection.execute(update)
+    
+    def set_low_cost_checking(self, operation: Operation, value: bool) -> None:
+        with self.engine.begin() as connection:
+            update = operation_modes.update()\
+                    .where(operation_modes.c.name == operation.value)\
+                    .values(active=True, check_schedule=value)
+
+            connection.execute(update)
