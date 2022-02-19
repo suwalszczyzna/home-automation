@@ -313,6 +313,6 @@ class PostgresDB(AbstractDatabase):
         with self.engine.begin() as connection:
             update = operation_modes.update()\
                     .where(operation_modes.c.id == operation.value)\
-                    .values(active=True, check_schedule=value)
+                    .values(check_schedule=value)
 
             connection.execute(update)
