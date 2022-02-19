@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.domain.devices import Device
+from app.domain.devices import Device, Status
 from app.domain.operation_modes import TempConfig, Operation
 from app.domain.schedulers import WaterHeatSchedule, LowerCostPower
 from app.domain.sensors import TempSensor
@@ -50,7 +50,7 @@ class AbstractDatabase(ABC):
         pass
 
     @abstractmethod
-    def set_device_status(self, device_name: str, status: bool):
+    def set_device_status(self, device_name: str, status: Status):
         pass
 
     @abstractmethod
