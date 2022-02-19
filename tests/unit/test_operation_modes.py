@@ -157,7 +157,7 @@ class TestAutoModeHeaterPriority:
             co_temp=30.0,
             max_water_temp=MAX_WATER_TEMP
         )
-        heater_priority = AutoModeHeaterPriority()
+        heater_priority = AutoModeHeaterPriority([])
         heater_priority.invoke(temp_config)
 
         new_statuses.assert_called_with(
@@ -171,7 +171,7 @@ class TestAutoModeHeaterPriority:
             co_temp=30.0,
             max_water_temp=MAX_WATER_TEMP
         )
-        heater_priority = AutoModeHeaterPriority()
+        heater_priority = AutoModeHeaterPriority([])
         heater_priority.invoke(temp_config)
 
         new_statuses.assert_called_with(

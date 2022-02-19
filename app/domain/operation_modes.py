@@ -35,15 +35,25 @@ def new_statuses(new_valve_status: Status, new_water_heater_status: Status) -> L
     ]
 
 
-class OperationMode(abc.ABC):
-    @abc.abstractmethod
+class OperationMode:
+    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
+        self.schedules = lower_cost_power_schedulers
+
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
         raise NotImplementedError
+
+    def heater_turn_on(self, check_schedule: bool) -> Status:
+        is_lower_cost = check_schedulers(datetime.now(), self.schedules)
+
+        if (not check_schedule) or (check_schedule and is_lower_cost):
+            return Status.TURN_ON
+
+        return Status.TURN_OFF
 
 
 class AutoMode(OperationMode):
     def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
-        self.schedules = lower_cost_power_schedulers
+        super().__init__(lower_cost_power_schedulers)
 
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
 
@@ -66,15 +76,7 @@ class AutoMode(OperationMode):
                     new_water_heater_status=self.heater_turn_on(check_schedule)
                 )
 
-    def heater_turn_on(self, check_schedule: bool) -> Status:
-        is_lower_cost = check_schedulers(datetime.now(), self.schedules)
-
-        if (not check_schedule) or (check_schedule and is_lower_cost):
-            return Status.TURN_ON
-
-        return Status.TURN_OFF
-
-    def temp_diff_water_vs_co(self, temp_config: TempConfig) -> int:
+    def temp_diff_water_vs_co(self, temp_config: TempConfig) -> float:
         return temp_config.co_temp - temp_config.water_temp
 
     def valve_should_turn_on(self, temp_config: TempConfig) -> bool:
@@ -86,14 +88,14 @@ class AutoMode(OperationMode):
 
 class AutoModeHeaterPriority(OperationMode):
 
-    def __init__(self):
-        pass
+    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
+        super().__init__(lower_cost_power_schedulers)
 
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
         if temp_config.water_temp < temp_config.max_water_temp:
             return new_statuses(
                 new_valve_status=Status.TURN_OFF,
-                new_water_heater_status=Status.TURN_ON
+                new_water_heater_status=self.heater_turn_on(check_schedule)
             )
 
         elif temp_config.water_temp >= temp_config.max_water_temp:
