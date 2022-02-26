@@ -1,7 +1,6 @@
 import os
 
 import inject
-from celery import Celery
 from flask import Flask
 
 import logger

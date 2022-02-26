@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from celery import Celery
 
-from app.entrypoints.flask.configuration import configure_application, configure_inject, configure_celery
+from app.entrypoints.flask.configuration import configure_application, configure_inject
 from app.entrypoints.flask.routes.mode_blueprint import create_mode_blueprint
 from app.entrypoints.flask.routes.sensors_blueprint import create_sensors_blueprint
 from app.entrypoints.flask.routes.common import create_common_blueprint
