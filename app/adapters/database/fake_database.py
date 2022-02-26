@@ -1,8 +1,8 @@
 from datetime import time
 from typing import List
 
-from app.domain.devices import Device, Status
-from app.domain.operation_modes import Operation, TempConfig
+from app.domain.devices import Device, Status, TempConfig
+from app.domain.operation_modes import Operation
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Weekday
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.sensors import TempSensor
