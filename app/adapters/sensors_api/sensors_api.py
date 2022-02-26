@@ -10,7 +10,7 @@ log = logger.get_logger("SensorsAPI")
 
 
 class SensorsAPI(AbstractSensorApi):
-    def get_all_sensors(self) -> List[TempSensor]:
+    def get_all_temp_sensors(self) -> List[TempSensor]:
         result = []
         available_sensors = W1ThermSensor.get_available_sensors()
 

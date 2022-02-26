@@ -3,8 +3,8 @@ from unittest import mock
 
 from freezegun import freeze_time
 
-from app.domain.devices import Status
-from app.domain.operation_modes import AutoMode, TempConfig, AutoModeHeaterPriority
+from app.domain.devices import Status, TempConfig
+from app.domain.operation_modes import AutoMode, AutoModeHeaterPriority
 from app.domain.schedulers import LowerCostPower, Weekday
 
 MAX_WATER_TEMP = 50.0

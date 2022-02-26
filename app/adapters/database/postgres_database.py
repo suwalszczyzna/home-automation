@@ -1,16 +1,15 @@
 import uuid
 from datetime import datetime
 from typing import List
-from webbrowser import Opera
 
 from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, DateTime, Time, func, ForeignKey, Integer, \
     Boolean
 from sqlalchemy.dialects.postgresql import UUID
 
 import logger
-from app.domain.devices import Device, Status
+from app.domain.devices import Device, Status, TempConfig
 from app.domain.interfaces.abstract_database import AbstractDatabase
-from app.domain.operation_modes import Operation, TempConfig
+from app.domain.operation_modes import Operation
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday
 from app.domain.sensors import TempSensor
 
@@ -281,15 +280,15 @@ class PostgresDB(AbstractDatabase):
 
     def set_device_status(self, device_name: str, status: Status):
         with self.engine.begin() as connection:
-            update = smart_devices.update()\
-                    .where(smart_devices.c.name == device_name)\
-                    .values(last_status=status.value)
+            update = smart_devices.update() \
+                .where(smart_devices.c.name == device_name) \
+                .values(last_status=status.value)
             connection.execute(update)
 
     def get_device_status(self, device_name: str) -> bool:
         with self.engine.begin() as connection:
-            select = smart_devices.select()\
-                    .where(smart_devices.c.name == device_name)
+            select = smart_devices.select() \
+                .where(smart_devices.c.name == device_name)
             result = connection.execute(select).fetchone()
 
             return result[6] if result else False
@@ -298,21 +297,38 @@ class PostgresDB(AbstractDatabase):
         with self.engine.begin() as connection:
             for o in Operation:
                 connection.execute(
-                    operation_modes.update()\
-                    .where(operation_modes.c.id == o.value)\
-                    .values(active=False)
+                    operation_modes.update() \
+                        .where(operation_modes.c.id == o.value) \
+                        .values(active=False)
                 )
 
-            update = operation_modes.update()\
-                    .where(operation_modes.c.id == operation.value)\
-                    .values(active=True)
+            update = operation_modes.update() \
+                .where(operation_modes.c.id == operation.value) \
+                .values(active=True)
 
             connection.execute(update)
-    
+
     def set_low_cost_checking(self, operation: Operation, value: bool) -> None:
         with self.engine.begin() as connection:
-            update = operation_modes.update()\
-                    .where(operation_modes.c.id == operation.value)\
-                    .values(check_schedule=value)
+            update = operation_modes.update() \
+                .where(operation_modes.c.id == operation.value) \
+                .values(check_schedule=value)
+
+            connection.execute(update)
+
+    def get_current_power(self, device_name: str) -> float:
+        with self.engine.begin() as connection:
+            query = temp_config \
+                .select() \
+                .where(temp_config.c.config_name == device_name)
+
+            query_result = connection.execute(query).fetchone()
+            return query_result[1] if query_result else 0.0
+
+    def set_current_power(self, device_name: str, value: float) -> None:
+        with self.engine.begin() as connection:
+            update = temp_config.update() \
+                .where(temp_config.c.config_name == device_name) \
+                .values(value=value)
 
             connection.execute(update)

@@ -1,26 +1,9 @@
-import abc
-import math
-from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import List
 
-from app.domain.devices import Devices, Status, NewDeviceStatus
+from app.domain.devices import Devices, Status, NewDeviceStatus, TempConfig
 from app.domain.schedulers import LowerCostPower, check_schedulers
-
-
-@dataclass
-class TempConfig:
-    max_water_temp: float
-    water_temp: float
-    co_temp: float
-
-    def to_dict(self):
-        return {
-            'max_water_temp': self.max_water_temp,
-            'water_temp': self.water_temp,
-            'co_temp': self.co_temp
-        }
 
 
 class Operation(Enum):

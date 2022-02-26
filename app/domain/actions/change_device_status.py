@@ -23,7 +23,7 @@ class ChangeDeviceStatus:
             log.info("Status from db for device %s is %s", device.name, status_from_db)
             if status_from_db != status.status.value:
                 log.info("Setting %s to %s using api", device.name, status.status)
-                result = self._api.set_status(device, status.status)
+                result = self._api.set_switch_status(device, status.status)
                 if result:
                     log.info("Saving new status to db (%s: %s)", device.name, status.status)
                     self._db.set_device_status(device.name, status.status)
