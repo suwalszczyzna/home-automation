@@ -1,7 +1,7 @@
 from datetime import time
 from typing import List
 
-from app.domain.devices import Device, Status, TempConfig
+from app.domain.devices import Device, Status, TempConfig, CurrentPower
 from app.domain.operation_modes import Operation
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Weekday
 from app.domain.interfaces.abstract_database import AbstractDatabase
@@ -9,6 +9,12 @@ from app.domain.sensors import TempSensor
 
 
 class FakeDatabase(AbstractDatabase):
+    def set_current_power(self, device_name: str, value: float) -> None:
+        pass
+
+    def get_current_power(self, device_name: str) -> float:
+        return 1500.2
+
     def save_temp(self, sensor: TempSensor):
         pass
 

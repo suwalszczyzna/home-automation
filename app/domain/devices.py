@@ -5,6 +5,7 @@ from enum import Enum
 class Devices(Enum):
     WATER_HEATER = "water_heater"
     COIL_VALVE = "valve"
+    WASHER = "washer"
 
 
 class Status(Enum):
@@ -38,4 +39,14 @@ class TempConfig:
             'max_water_temp': self.max_water_temp,
             'water_temp': self.water_temp,
             'co_temp': self.co_temp
+        }
+
+
+@dataclass
+class CurrentPower:
+    washer: float
+
+    def to_dict(self):
+        return {
+            'washer': self.washer
         }

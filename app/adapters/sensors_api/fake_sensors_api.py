@@ -9,7 +9,7 @@ log = logger.get_logger("FakeSensorAPI")
 
 
 class FakeSensorAPI(AbstractSensorApi):
-    def get_all_sensors(self) -> List[TempSensor]:
+    def get_all_temp_sensors(self) -> List[TempSensor]:
         log.info("Data from FakeSensorAPI")
         return[
             TempSensor("00000d9931fa", random.randint(30, 50)),

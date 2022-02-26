@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.domain.devices import Device, Status, TempConfig
+from app.domain.devices import Device, Status, TempConfig, CurrentPower
 from app.domain.operation_modes import Operation
 from app.domain.schedulers import WaterHeatSchedule, LowerCostPower
 from app.domain.sensors import TempSensor
@@ -63,4 +63,12 @@ class AbstractDatabase(ABC):
 
     @abstractmethod
     def get_device_status(self, device_name: str) -> bool:
+        pass
+
+    @abstractmethod
+    def get_current_power(self, device_name: str) -> float:
+        pass
+
+    @abstractmethod
+    def set_current_power(self, device_name: str, value: float) -> None:
         pass

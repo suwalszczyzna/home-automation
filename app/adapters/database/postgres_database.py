@@ -315,3 +315,20 @@ class PostgresDB(AbstractDatabase):
                 .values(check_schedule=value)
 
             connection.execute(update)
+
+    def get_current_power(self, device_name: str) -> float:
+        with self.engine.begin() as connection:
+            query = temp_config \
+                .select() \
+                .where(temp_config.c.config_name == device_name)
+
+            query_result = connection.execute(query).fetchone()
+            return query_result[1] if query_result else 0.0
+
+    def set_current_power(self, device_name: str, value: float) -> None:
+        with self.engine.begin() as connection:
+            update = temp_config.update() \
+                .where(temp_config.c.config_name == device_name) \
+                .values(value=value)
+
+            connection.execute(update)
