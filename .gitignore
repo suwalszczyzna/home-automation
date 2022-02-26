@@ -186,3 +186,5 @@ fabric.properties
 .idea/codestream.xml
 
 .vscode
+
+*.db
