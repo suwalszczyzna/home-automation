@@ -1,6 +1,7 @@
 import os
 
 import inject
+from celery import Celery
 from flask import Flask
 
 import logger
@@ -49,10 +50,10 @@ def get_db(prod_env: str, uri: str):
 
 def configure_application(application: Flask) -> None:
     application.config.update(
-        DATABASE_URI=os.getenv('DATABASE_URI')
-    )
-    application.config.update(
-        PROD=os.getenv('PROD')
+        DATABASE_URI=os.getenv('DATABASE_URI'),
+        PROD=os.getenv('PROD'),
+        CELERY_BROKER_URL=os.getenv('CELERY_BROKER_URL'),
+        CELERY_RESULT_BACKEND=os.getenv('CELERY_RESULT_BACKEND')
     )
 
 
