@@ -3,7 +3,7 @@ import inject
 from app.domain.interfaces.abstract_database import AbstractDatabase
 
 
-class Tempareratures:
+class GetSensorsValue:
     @inject.autoparams()
     def __init__(self, db: AbstractDatabase):
         self._db = db

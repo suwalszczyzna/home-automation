@@ -4,16 +4,16 @@ import logger
 from app.domain.interfaces.abstract_sensor_api import AbstractSensorApi
 from app.domain.interfaces.abstract_database import AbstractDatabase
 
-log = logger.get_logger("SaveTempsensorsValues")
+log = logger.get_logger("UpdateSensorsValues")
 
 
-class SaveTempsensorsValues:
+class UpdateSensorsValue:
     @inject.autoparams()
     def __init__(self, sensor_api: AbstractSensorApi, db: AbstractDatabase):
         self._sensor_api = sensor_api
         self._db = db
 
-    def run(self):
+    def update_temp(self):
         sensors = self._sensor_api.get_all_sensors()
         log.info("Got %s sensors", len(sensors))
         for sensor in sensors:

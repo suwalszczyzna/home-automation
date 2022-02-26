@@ -2,13 +2,15 @@ import inject
 from flask import Blueprint, Response, jsonify, request
 
 from app.domain.actions.manage_operation_modes import ManageOperationModes
-from app.domain.actions.temperatures import Tempareratures
+from app.domain.actions.get_sensors_value import GetSensorsValue
+
 
 def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
+    return v.lower() in ("yes", "true", "t", "1")
+
 
 @inject.autoparams()
-def create_common_blueprint(temp_actions: Tempareratures, manage_op: ManageOperationModes) -> Blueprint:
+def create_common_blueprint(temp_actions: GetSensorsValue, manage_op: ManageOperationModes) -> Blueprint:
     common = Blueprint("common", __name__)
 
     @common.route("/temperature")
@@ -20,13 +22,13 @@ def create_common_blueprint(temp_actions: Tempareratures, manage_op: ManageOpera
     def get_actual_mode() -> Response:
         result = manage_op.get_active_operation_mode()
         return jsonify(result)
-    
+
     @common.route("/set_operation_mode")
     def set_operation_mode() -> Response:
         operation = request.args.get('operation')
         result = manage_op.set_active_operation_mode(operation)
         return jsonify(result)
-    
+
     @common.route("/set_checking_low_cost")
     def set_checking_low_cost() -> Response:
         operation = request.args.get('operation')
