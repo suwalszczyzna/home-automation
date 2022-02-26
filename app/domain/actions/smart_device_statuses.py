@@ -11,7 +11,7 @@ class SmartDevicesStatuses:
 
     @staticmethod
     def _is_device_on(current_power: float) -> bool:
-        if current_power > 10:
+        if current_power > 1:
             return True
         return False
 
