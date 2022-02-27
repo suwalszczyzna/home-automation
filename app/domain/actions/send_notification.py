@@ -17,8 +17,8 @@ class SendNotification:
     def send_notification(self):
         device_name = Devices.WASHER.value
         should_send_notification = self._db.get_notifier_status(device_name)
-
-        if should_send_notification:
+        washer_current_power = self._db.get_current_power(device_name)
+        if should_send_notification and washer_current_power < 1:
             subscribers = [
                 Subscriber("508635104")
             ]
