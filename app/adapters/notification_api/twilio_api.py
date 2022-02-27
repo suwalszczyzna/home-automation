@@ -17,12 +17,12 @@ class TwilioApi(AbstractNotificationApi):
     def send_notification(self, receivers: List[Subscriber], message: str):
         try:
             for subscriber in receivers:
-                message = self.client.messages.create(
+                twilio_message = self.client.messages.create(
                     to=f"whatsapp:+48{subscriber.number}",
                     from_="whatsapp:+14155238886",
                     body=message,)
 
-                log.info(f"Message for: {subscriber.number}, SID: {message.sid}")
+                log.info(f"Message for: {subscriber.number}, SID: {twilio_message.sid}")
 
         except TwilioRestException as e:
             log.error("Twilio has a problem", exc_info=e)
