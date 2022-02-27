@@ -72,3 +72,11 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def set_current_power(self, device_name: str, value: float) -> None:
         pass
+
+    @abstractmethod
+    def set_notifier_status(self, device_name: str, value: bool) -> None:
+        pass
+
+    @abstractmethod
+    def get_notifier_status(self, device_name:str) -> bool:
+        pass

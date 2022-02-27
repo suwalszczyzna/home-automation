@@ -65,6 +65,11 @@ smart_devices = Table('smart_devices', metadata,
                       Column('last_status', Boolean, nullable=False, default=False),
                       )
 
+notifier = Table('notifier', metadata,
+                 Column('name', Text, primary_key=True),
+                 Column('should-notify', Boolean, nullable=False, default=False)
+                 )
+
 
 class PostgresDB(AbstractDatabase):
     def __init__(self, database_uri: str):
@@ -332,3 +337,14 @@ class PostgresDB(AbstractDatabase):
                 .values(value=value)
 
             connection.execute(update)
+
+    def set_notifier_status(self, device_name: str, value: bool) -> None:
+        with self.engine.begin() as connection:
+            update = notifier.update().where(notifier.c.name == device_name).values(value=value)
+            connection.execute(update)
+
+    def get_notifier_status(self, device_name: str) -> bool:
+        with self.engine.begin() as connection:
+            select = notifier.select().where(notifier.c.name == device_name)
+            result = connection.execute(select).fetchone()
+            return result[1] if result else False
