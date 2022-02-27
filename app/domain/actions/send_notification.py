@@ -20,7 +20,8 @@ class SendNotification:
         washer_current_power = self._db.get_current_power(device_name)
         if should_send_notification and washer_current_power < 1:
             subscribers = [
-                Subscriber("508635104")
+                Subscriber("508635104"),
+                Subscriber("512556000"),
             ]
             self._api.send_notification(subscribers, "Pralka uprała")
             self._db.set_notifier_status(device_name, False)
