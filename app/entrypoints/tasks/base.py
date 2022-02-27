@@ -25,6 +25,7 @@ def invoke_mode(invoke_operation_mode: InvokeOperationMode):
 
 
 @celery.task(name='notifications')
+@inject.autoparams()
 def send_notification(notifier: SendNotification):
     notifier.send_notification()
 
