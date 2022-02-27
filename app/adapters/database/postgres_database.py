@@ -67,7 +67,7 @@ smart_devices = Table('smart_devices', metadata,
 
 notifier = Table('notifier', metadata,
                  Column('name', Text, primary_key=True),
-                 Column('should-notify', Boolean, nullable=False, default=False)
+                 Column('value', Boolean, nullable=False, default=False)
                  )
 
 
