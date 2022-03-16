@@ -1,7 +1,5 @@
 from datetime import timedelta
 
-from ..flask.application import celery
-
 CELERYBEAT_SCHEDULE = {
     'update_sensors': {
         'task': 'update_sensors',
@@ -14,5 +12,9 @@ CELERYBEAT_SCHEDULE = {
     'invoke_mode': {
         'task': 'invoke_mode',
         'schedule': timedelta(minutes=10)
+    },
+    'notifications': {
+        'task': 'notifications',
+        'schedule': timedelta(minutes=1)
     },
 }

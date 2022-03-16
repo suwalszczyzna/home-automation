@@ -10,7 +10,7 @@ class SmartDevicesStatuses:
         self._db = db
 
     @staticmethod
-    def _is_device_on(current_power: float) -> bool:
+    def is_device_on(current_power: float) -> bool:
         if current_power > 1:
             return True
         return False
@@ -24,7 +24,7 @@ class SmartDevicesStatuses:
             "valve": self._db.get_device_status(Devices.COIL_VALVE.value),
             "washer": {
                 "power": self._washer_current_power(),
-                "status": self._is_device_on(self._washer_current_power())
+                "status": self.is_device_on(self._washer_current_power())
             }
         }
 

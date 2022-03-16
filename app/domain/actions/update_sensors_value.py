@@ -5,6 +5,7 @@ from app.domain.devices import Devices
 from app.domain.interfaces.abstract_sensor_api import AbstractSensorApi
 from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 from app.domain.interfaces.abstract_database import AbstractDatabase
+from app.domain.actions.smart_device_statuses import SmartDevicesStatuses
 
 log = logger.get_logger("UpdateSensorsValues")
 
@@ -28,3 +29,5 @@ class UpdateSensorsValue:
         washer = self._db.get_device_by_name(Devices.WASHER.value)
         washer_current_power = self._device_api.get_current_power(washer)
         self._db.set_current_power(washer.name, washer_current_power)
+        if washer_current_power > 1:
+            self._db.set_notifier_status(Devices.WASHER.value, True)

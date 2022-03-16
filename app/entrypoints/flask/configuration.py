@@ -5,11 +5,13 @@ from flask import Flask
 
 import logger
 from app.adapters.api.fake_api import FakeAPI
+from app.adapters.notification_api.twilio_api import TwilioApi
 from app.adapters.database.fake_database import FakeDatabase
 from app.adapters.sensors_api.fake_sensors_api import FakeSensorAPI
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 from app.domain.interfaces.abstract_sensor_api import AbstractSensorApi
+from app.domain.interfaces.abstract_notification_api import AbstractNotificationApi
 
 log = logger.get_logger("configuration")
 
@@ -52,7 +54,9 @@ def configure_application(application: Flask) -> None:
         DATABASE_URI=os.getenv('DATABASE_URI'),
         PROD=os.getenv('PROD'),
         CELERY_BROKER_URL=os.getenv('CELERY_BROKER_URL'),
-        CELERY_RESULT_BACKEND=os.getenv('CELERY_RESULT_BACKEND')
+        CELERY_RESULT_BACKEND=os.getenv('CELERY_RESULT_BACKEND'),
+        TWILIO_ACCOUNT_SID=os.getenv('TWILIO_ACCOUNT_SID'),
+        TWILIO_AUTH_TOKEN=os.getenv('TWILIO_AUTH_TOKEN')
     )
 
 
@@ -61,5 +65,6 @@ def configure_inject(application: Flask) -> None:
         binder.bind(AbstractDatabase, get_db(application.config['PROD'], application.config['DATABASE_URI']))
         binder.bind(AbstractDeviceAPI, get_smart_device_api(application.config['PROD']))
         binder.bind(AbstractSensorApi, get_sensor_api(application.config['PROD']))
+        binder.bind(AbstractNotificationApi, TwilioApi(application.config['TWILIO_ACCOUNT_SID'], application.config['TWILIO_AUTH_TOKEN']))
 
     inject.configure(config)

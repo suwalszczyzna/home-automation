@@ -3,14 +3,14 @@ from flask import Blueprint, Response, jsonify, request
 
 from app.domain.actions.manage_operation_modes import ManageOperationModes
 from app.domain.actions.get_sensors_value import GetSensorsValue
-
+from app.domain.actions.send_notification import SendNotification
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
 
 @inject.autoparams()
-def create_common_blueprint(temp_actions: GetSensorsValue, manage_op: ManageOperationModes) -> Blueprint:
+def create_common_blueprint(temp_actions: GetSensorsValue, manage_op: ManageOperationModes, notify: SendNotification) -> Blueprint:
     common = Blueprint("common", __name__)
 
     @common.route("/temperature")
@@ -36,4 +36,8 @@ def create_common_blueprint(temp_actions: GetSensorsValue, manage_op: ManageOper
         result = manage_op.set_checking_low_cost(operation, should_check)
         return jsonify(result)
 
+    @common.route("/notify")
+    def send_notify() -> Response:
+        notify.send_notification()
+        return jsonify({"code": "OK"})
     return common
