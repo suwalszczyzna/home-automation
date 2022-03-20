@@ -5,7 +5,7 @@ from flask import Flask
 
 import logger
 from app.adapters.api.fake_api import FakeAPI
-from app.adapters.notification_api.twilio_api import TwilioApi
+from app.adapters.notification_api.telegram_api import TelegramAPI
 from app.adapters.database.fake_database import FakeDatabase
 from app.adapters.sensors_api.fake_sensors_api import FakeSensorAPI
 from app.domain.interfaces.abstract_database import AbstractDatabase
@@ -55,8 +55,7 @@ def configure_application(application: Flask) -> None:
         PROD=os.getenv('PROD'),
         CELERY_BROKER_URL=os.getenv('CELERY_BROKER_URL'),
         CELERY_RESULT_BACKEND=os.getenv('CELERY_RESULT_BACKEND'),
-        TWILIO_ACCOUNT_SID=os.getenv('TWILIO_ACCOUNT_SID'),
-        TWILIO_AUTH_TOKEN=os.getenv('TWILIO_AUTH_TOKEN')
+        TELEGRAM_TOKEN=os.getenv('TELEGRAM_TOKEN'),
     )
 
 
@@ -65,6 +64,6 @@ def configure_inject(application: Flask) -> None:
         binder.bind(AbstractDatabase, get_db(application.config['PROD'], application.config['DATABASE_URI']))
         binder.bind(AbstractDeviceAPI, get_smart_device_api(application.config['PROD']))
         binder.bind(AbstractSensorApi, get_sensor_api(application.config['PROD']))
-        binder.bind(AbstractNotificationApi, TwilioApi(application.config['TWILIO_ACCOUNT_SID'], application.config['TWILIO_AUTH_TOKEN']))
+        binder.bind(AbstractNotificationApi, TelegramAPI(application.config['TELEGRAM_TOKEN']))
 
     inject.configure(config)
