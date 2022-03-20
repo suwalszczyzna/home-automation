@@ -13,8 +13,8 @@ class TelegramAPI(AbstractNotificationApi):
         updates = self.bot.get_updates()
 
         for chat_id in set([update.message.chat.id for update in updates]):
-            log.info("Sending notification to chat id: ", chat_id)
+            log.info("Sending notification to chat id: %s", chat_id)
             try:
                 self.bot.send_message(text=message, chat_id=chat_id)
             except Exception as e:
-                log.error("Somethings goes wrong during send notification, chat id: ", chat_id)
+                log.error("Somethings goes wrong during send notification, chat id: %s", chat_id)
