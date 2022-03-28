@@ -347,7 +347,7 @@ class PostgresDB(AbstractDatabase):
             result = connection.execute(select).fetchone()
             return result[1] if result else False
 
-    def get_chats(self) -> List[int]:
+    def get_chats(self) -> List[str]:
         with self.engine.begin() as connection:
             select = telegram.select()
             result = connection.execute(select)

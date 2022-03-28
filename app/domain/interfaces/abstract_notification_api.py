@@ -4,5 +4,5 @@ from typing import List
 
 class AbstractNotificationApi(ABC):
 
-    def send_notification(self, message: str, chat_ids: List):
+    def send_notification(self, message: str, chat_ids: List[str]):
         pass

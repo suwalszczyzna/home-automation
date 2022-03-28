@@ -82,5 +82,5 @@ class AbstractDatabase(ABC):
         pass
 
     @abstractmethod
-    def get_chats(self) -> List[int]:
+    def get_chats(self) -> List[str]:
         pass
