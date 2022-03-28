@@ -16,5 +16,6 @@ class SendNotification:
         should_send_notification = self._db.get_notifier_status(device_name)
         washer_current_power = self._db.get_current_power(device_name)
         if should_send_notification and washer_current_power < 1:
-            self._api.send_notification("Pralka uprała 👍")
+            chats = self._db.get_chats()
+            self._api.send_notification("🫧 Pralka uprała 🫧", chats)
             self._db.set_notifier_status(device_name, False)

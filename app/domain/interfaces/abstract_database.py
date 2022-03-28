@@ -80,3 +80,7 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def get_notifier_status(self, device_name:str) -> bool:
         pass
+
+    @abstractmethod
+    def get_chats(self) -> List[int]:
+        pass

@@ -1,10 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import List
-
-from app.domain.notification import Subscriber
 
 
 class AbstractNotificationApi(ABC):
 
-    def send_notification(self, message: str):
+    def send_notification(self, message: str, chat_ids: List):
         pass

@@ -1,3 +1,5 @@
+from typing import List
+
 import logger
 import telegram
 from app.domain.interfaces.abstract_notification_api import AbstractNotificationApi
@@ -9,10 +11,8 @@ class TelegramAPI(AbstractNotificationApi):
     def __init__(self, token):
         self.bot = telegram.Bot(token=token)
 
-    def send_notification(self, message: str):
-        updates = self.bot.get_updates()
-
-        for chat_id in set([update.message.chat.id for update in updates]):
+    def send_notification(self, message: str, chats: List[int]):
+        for chat_id in chats:
             log.info("Sending notification to chat id: %s", chat_id)
             try:
                 self.bot.send_message(text=message, chat_id=chat_id)

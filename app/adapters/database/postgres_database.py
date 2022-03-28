@@ -70,6 +70,11 @@ notifier = Table('notifier', metadata,
                  Column('value', Boolean, nullable=False, default=False)
                  )
 
+telegram = Table('telegram', metadata,
+                 Column('id', Integer, primary_key=True),
+                 Column('chat_id', Text, nullable=False)
+                 )
+
 
 class PostgresDB(AbstractDatabase):
     def __init__(self, database_uri: str):
@@ -157,13 +162,6 @@ class PostgresDB(AbstractDatabase):
 
     def save_temp(self, sensor: TempSensor):
         with self.engine.begin() as connection:
-            history_insert = temp_history.insert().values(
-                sensor=sensor.name,
-                temperature=sensor.temperature,
-                created=datetime.now()
-            )
-            connection.execute(history_insert)
-
             sensor_select = temp_config.select() \
                 .where(temp_config.c.config_name == sensor.name)
             sensor_result = connection.execute(sensor_select).fetchone()
@@ -348,3 +346,9 @@ class PostgresDB(AbstractDatabase):
             select = notifier.select().where(notifier.c.name == device_name)
             result = connection.execute(select).fetchone()
             return result[1] if result else False
+
+    def get_chats(self) -> List[int]:
+        with self.engine.begin() as connection:
+            select = telegram.select()
+            result = connection.execute(select)
+            return [item[1] for item in result]
