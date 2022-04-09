@@ -1,7 +1,7 @@
 import inject
 
 import logger
-from app.domain.devices import Devices
+from app.domain.devices import Devices, POWER_DEVICES
 from app.domain.interfaces.abstract_sensor_api import AbstractSensorApi
 from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 from app.domain.interfaces.abstract_database import AbstractDatabase
@@ -25,9 +25,10 @@ class UpdateSensorsValue:
             self._db.save_temp(sensor)
 
     def update_current_power(self):
-        log.info("Update current power")
-        washer = self._db.get_device_by_name(Devices.WASHER.value)
-        washer_current_power = self._device_api.get_current_power(washer)
-        self._db.set_current_power(washer.name, washer_current_power)
-        if washer_current_power > 1:
-            self._db.set_notifier_status(Devices.WASHER.value, True)
+        for device_name in POWER_DEVICES:
+            log.info("Update current power for device: %s", device_name)
+            device = self._db.get_device_by_name(device_name)
+            current_device_power = self._device_api.get_current_power(device)
+            self._db.set_current_power(device.name, current_device_power)
+            if current_device_power > 1:
+                self._db.set_notifier_status(device_name, True)

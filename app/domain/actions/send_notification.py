@@ -1,6 +1,6 @@
 import inject
 
-from app.domain.devices import Devices
+from app.domain.devices import Devices, POWER_DEVICES
 from app.domain.interfaces.abstract_notification_api import AbstractNotificationApi
 from app.domain.interfaces.abstract_database import AbstractDatabase
 
@@ -18,8 +18,7 @@ class SendNotification:
         self._db = db
     
     def send_notification(self):
-        devices = [Devices.WASHER.value, Devices.DRYER.value]
-        for device_name in devices:
+        for device_name in POWER_DEVICES:
             washer_current_power = self._db.get_current_power(device_name)
             should_send_notification = self._db.get_notifier_status(device_name) and washer_current_power < 1
 

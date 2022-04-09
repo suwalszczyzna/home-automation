@@ -9,6 +9,9 @@ class Devices(Enum):
     DRYER = "dryer"
 
 
+POWER_DEVICES = [Devices.WASHER.value, Devices.DRYER.value]
+
+
 class Status(Enum):
     TURN_ON = 1
     TURN_OFF = 0
