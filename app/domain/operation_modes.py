@@ -18,6 +18,8 @@ def new_statuses(new_valve_status: Status, new_water_heater_status: Status) -> L
     ]
 
 
+hysteresis = 10
+
 class OperationMode:
     def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
         self.schedules = lower_cost_power_schedulers
@@ -53,7 +55,7 @@ class AutoMode(OperationMode):
                     new_water_heater_status=Status.TURN_OFF
                 )
 
-            else:
+            elif temp_config.water_temp < (temp_config.max_water_temp - hysteresis):
                 return new_statuses(
                     new_valve_status=Status.TURN_OFF,
                     new_water_heater_status=self.heater_turn_on(check_schedule)
@@ -75,7 +77,7 @@ class AutoModeHeaterPriority(OperationMode):
         super().__init__(lower_cost_power_schedulers)
 
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
-        if temp_config.water_temp < temp_config.max_water_temp:
+        if temp_config.water_temp < (temp_config.max_water_temp - hysteresis):
             return new_statuses(
                 new_valve_status=Status.TURN_OFF,
                 new_water_heater_status=self.heater_turn_on(check_schedule)
