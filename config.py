@@ -1,5 +1,5 @@
 # Log
-logging_format = "%(asctime)s|%(levelname)s|%(name)s|%(funcName)s|%(message)s"
+logging_format = "%(asctime)s | %(levelname)s | %(name)s | %(funcName)s | %(message)s"
 log_filepath = "stdout.log"
 
 # Misc

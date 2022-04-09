@@ -20,6 +20,7 @@ def new_statuses(new_valve_status: Status, new_water_heater_status: Status) -> L
 
 hysteresis = 10
 
+
 class OperationMode:
     def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
         self.schedules = lower_cost_power_schedulers
@@ -60,6 +61,11 @@ class AutoMode(OperationMode):
                     new_valve_status=Status.TURN_OFF,
                     new_water_heater_status=self.heater_turn_on(check_schedule)
                 )
+
+        return new_statuses(
+            new_valve_status=Status.TURN_OFF,
+            new_water_heater_status=Status.TURN_OFF
+        )
 
     def temp_diff_water_vs_co(self, temp_config: TempConfig) -> float:
         return temp_config.co_temp - temp_config.water_temp
