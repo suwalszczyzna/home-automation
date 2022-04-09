@@ -6,6 +6,7 @@ class Devices(Enum):
     WATER_HEATER = "water_heater"
     COIL_VALVE = "valve"
     WASHER = "washer"
+    DRYER = "dryer"
 
 
 class Status(Enum):

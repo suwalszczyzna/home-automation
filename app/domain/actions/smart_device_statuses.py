@@ -18,6 +18,9 @@ class SmartDevicesStatuses:
     def _washer_current_power(self):
         return self._db.get_current_power(Devices.WASHER.value)
 
+    def _dryer_current_power(self):
+        return self._db.get_current_power(Devices.DRYER.value)
+
     def get_smart_devices_statuses(self):
         return {
             "heater": self._db.get_device_status(Devices.WATER_HEATER.value),
@@ -25,6 +28,10 @@ class SmartDevicesStatuses:
             "washer": {
                 "power": self._washer_current_power(),
                 "status": self.is_device_on(self._washer_current_power())
+            },
+            "dryer": {
+                "power": self._dryer_current_power(),
+                "status": self.is_device_on(self._dryer_current_power())
             }
         }
 
