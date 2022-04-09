@@ -3,7 +3,7 @@ from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
     'update_sensors': {
         'task': 'update_sensors',
-        'schedule': timedelta(seconds=15)
+        'schedule': timedelta(seconds=30)
     },
     'update_current_power': {
         'task': 'update_current_power',
@@ -15,6 +15,6 @@ CELERYBEAT_SCHEDULE = {
     },
     'notifications': {
         'task': 'notifications',
-        'schedule': timedelta(minutes=1)
+        'schedule': timedelta(minutes=5)
     },
 }
