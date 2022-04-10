@@ -18,7 +18,7 @@ def new_statuses(new_valve_status: Status, new_water_heater_status: Status) -> L
     ]
 
 
-hysteresis = 10
+hysteresis = 9
 
 
 class OperationMode:
