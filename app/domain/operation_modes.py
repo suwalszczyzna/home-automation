@@ -62,11 +62,6 @@ class AutoMode(OperationMode):
                     new_water_heater_status=self.heater_turn_on(check_schedule)
                 )
 
-        return new_statuses(
-            new_valve_status=Status.TURN_OFF,
-            new_water_heater_status=Status.TURN_OFF
-        )
-
     def temp_diff_water_vs_co(self, temp_config: TempConfig) -> float:
         return temp_config.co_temp - temp_config.water_temp
 
@@ -88,8 +83,8 @@ class AutoModeHeaterPriority(OperationMode):
                 new_valve_status=Status.TURN_OFF,
                 new_water_heater_status=self.heater_turn_on(check_schedule)
             )
-
-        return new_statuses(
-            new_valve_status=Status.TURN_OFF,
-            new_water_heater_status=Status.TURN_OFF
-        )
+        elif temp_config.water_temp >= temp_config.max_water_temp:
+            return new_statuses(
+                new_valve_status=Status.TURN_OFF,
+                new_water_heater_status=Status.TURN_OFF
+            )

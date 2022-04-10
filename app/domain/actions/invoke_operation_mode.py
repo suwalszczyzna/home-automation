@@ -39,4 +39,5 @@ class InvokeOperationMode:
             mode = AutoModeHeaterPriority(low_cost_schedules)
             new_statuses = mode.invoke(temp_info, check_schedule=check_schedule)
 
-        self.change_device_status.run(new_statuses)
+        if new_statuses:
+            self.change_device_status.run(new_statuses)
