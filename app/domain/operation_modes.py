@@ -89,8 +89,7 @@ class AutoModeHeaterPriority(OperationMode):
                 new_water_heater_status=self.heater_turn_on(check_schedule)
             )
 
-        else:
-            return new_statuses(
-                new_valve_status=Status.TURN_OFF,
-                new_water_heater_status=Status.TURN_OFF
-            )
+        return new_statuses(
+            new_valve_status=Status.TURN_OFF,
+            new_water_heater_status=Status.TURN_OFF
+        )
