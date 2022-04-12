@@ -34,10 +34,6 @@ class TuyaAPI(AbstractDeviceAPI):
         log.info("Changing status for device: %s", device.name)
         try:
             tuya_device = self.create_tuya_device(device)
-            switch_status = self.get_device_switch_status(tuya_device)
-            if switch_status == status.value:
-                log.info("Device: %s is already %s (switch_status: %s). Pass.", device.name, status.name, switch_status)
-                return True
 
             if bool(status.value):
                 tuya_device.turn_on()
