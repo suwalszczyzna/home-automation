@@ -4,7 +4,7 @@ from dataclasses import dataclass
 sensors_desc = {
     "0119523a78ff": {"name": "raw_sensor", "temp_calibration_value": 0},
     "00000d9931fa": {"name": "sensor_co", "temp_calibration_value": 0},
-    "00000d96c007": {"name": "sensor_water", "temp_calibration_value": 10}
+    "00000d96c007": {"name": "sensor_water", "temp_calibration_value": 20}
 }
 
 
