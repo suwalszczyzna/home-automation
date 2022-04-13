@@ -27,7 +27,7 @@ class TuyaAPI(AbstractDeviceAPI):
         if tuya_status.get('Error'):
             log.info("Can't get tuya status: %s", tuya_status)
             return False
-        log.info(pprint(tuya_status))
+        log.info(tuya_status)
         return tuya_status['dps']['1']
 
     def get_device_switch_status(self, device: Device) -> Status:

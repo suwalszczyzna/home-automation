@@ -1,9 +1,9 @@
 import inject
-import logger
 
-from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
+import logger
+from app.domain.devices import Devices
 from app.domain.interfaces.abstract_database import AbstractDatabase
-from app.domain.devices import POWER_DEVICES, Device
+from app.domain.interfaces.abstract_device_api import AbstractDeviceAPI
 
 log = logger.get_logger(__name__)
 
@@ -16,7 +16,6 @@ class UpdateSmartDeviceStatuses:
 
     def run(self):
         log.info("Run update status from API")
-        for device_name in POWER_DEVICES:
-            device = self._db.get_device_by_name(device_name)
-            status = self._api.get_device_switch_status(device)
-            self._db.set_device_status(device.name, status)
+        device = self._db.get_device_by_name(Devices.WATER_HEATER.value)
+        status = self._api.get_device_switch_status(device)
+        self._db.set_device_status(device.name, status)
