@@ -22,7 +22,7 @@ class TuyaAPI(AbstractDeviceAPI):
         tuya_device.set_version(device.version)
         return tuya_device
 
-    def get_device_switch_status(self, tuya_device: OutletDevice):
+    def _get_device_switch_status(self, tuya_device: OutletDevice) -> bool:
         tuya_status = tuya_device.status()
         if tuya_status.get('Error'):
             log.info("Can't get tuya status: %s", tuya_status)
@@ -30,16 +30,25 @@ class TuyaAPI(AbstractDeviceAPI):
         log.info(pprint(tuya_status))
         return tuya_status['dps']['1']
 
+    def get_device_switch_status(self, device: Device) -> Status:
+        log.info("Check device status for %s", device.name)
+        try:
+            tuya_device = self.create_tuya_device(device)
+            return Status(self._get_device_switch_status(tuya_device))
+        except Exception as e:
+            log.error("Problem with checking device status for %s", device.name, exc_info=e)
+
     def set_switch_status(self, device: Device, status: Status) -> bool:
         log.info("Changing status for device: %s", device.name)
         try:
             tuya_device = self.create_tuya_device(device)
 
             if bool(status.value):
+                log.info("Send signal to turn_on device: %s", device.name)
                 tuya_device.turn_on()
-            else:
+            elif not bool(status.value):
+                log.info("Send signal to turn_off device: %s", device.name)
                 tuya_device.turn_off()
-            log.info("Send signal to %s device: %s", "turn_on" if bool(status.value) else "turn_off", device.name)
             return True
         except Exception as e:
             log.error("Problem with TuyaAPI device %s", device.name, exc_info=e)

@@ -4,6 +4,7 @@ from ..flask.application import celery
 from app.domain.actions.invoke_operation_mode import InvokeOperationMode
 from app.domain.actions.update_sensors_value import UpdateSensorsValue
 from app.domain.actions.send_notification import SendNotification
+from app.domain.actions.update_smart_device_statuses import UpdateSmartDeviceStatuses
 
 
 @celery.task(name='update_sensors')
@@ -29,3 +30,8 @@ def invoke_mode(invoke_operation_mode: InvokeOperationMode):
 def send_notification(notifier: SendNotification):
     notifier.send_notification()
 
+
+@celery.task(name='update_smart_device_status')
+@inject.autoparams()
+def update_smart_device_status(updater: UpdateSmartDeviceStatuses):
+    updater.run()
