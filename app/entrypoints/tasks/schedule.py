@@ -17,4 +17,8 @@ CELERYBEAT_SCHEDULE = {
         'task': 'notifications',
         'schedule': timedelta(minutes=5)
     },
+    'update_smart_device_status': {
+        'task': 'update_smart_device_status',
+        'schedule': timedelta(minutes=6)
+    },
 }

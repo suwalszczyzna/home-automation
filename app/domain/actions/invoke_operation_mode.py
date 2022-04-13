@@ -4,7 +4,6 @@ import logger
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.actions.change_device_status import ChangeDeviceStatus
 from app.domain.operation_modes import Operation, AutoMode, AutoModeHeaterPriority
-from app.entrypoints.tasks.base import update_smart_device_status
 
 log = logger.get_logger("InvokeOperationMode")
 
@@ -41,5 +40,3 @@ class InvokeOperationMode:
 
         if new_statuses:
             self.change_device_status.run(new_statuses)
-
-        update_smart_device_status.apply_async(countdown=5)
