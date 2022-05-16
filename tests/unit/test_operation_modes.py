@@ -3,11 +3,13 @@ from unittest import mock
 
 from freezegun import freeze_time
 
-from app.domain.devices import Status, TempConfig
+from app.domain.devices import Status, TempConfig, Hysteresis
 from app.domain.operation_modes import AutoMode, AutoModeHeaterPriority
 from app.domain.schedulers import LowerCostPower, Weekday
 
 MAX_WATER_TEMP = 50.0
+
+hysteresis = Hysteresis(Status.TURN_ON, 5)
 
 
 def auto_mode():
@@ -16,7 +18,8 @@ def auto_mode():
         end=time(10, 0),
         weekdays=[Weekday.MONDAY, Weekday.TUESDAY]
     )
-    return AutoMode([schedule])
+
+    return AutoMode([schedule], hysteresis)
 
 
 auto_mode = auto_mode()
@@ -122,7 +125,7 @@ class TestAutoModeWithAdditionalScheduleChecking:
             weekdays=[Weekday.SATURDAY, Weekday.SUNDAY]
         )
 
-        auto_mode_op = AutoMode([schedule])
+        auto_mode_op = AutoMode([schedule], hysteresis)
         auto_mode_op.invoke(self.temp_config, check_schedule=True)
 
         new_statuses.assert_called_with(
@@ -137,7 +140,7 @@ class TestAutoModeWithAdditionalScheduleChecking:
             weekdays=[Weekday.SATURDAY, Weekday.SUNDAY]
         )
 
-        auto_mode_op = AutoMode([schedule])
+        auto_mode_op = AutoMode([schedule], hysteresis)
         auto_mode_op.invoke(self.temp_config, check_schedule=True)
 
         new_statuses.assert_called_with(
@@ -155,7 +158,7 @@ class TestAutoModeHeaterPriority:
             co_temp=30.0,
             max_water_temp=MAX_WATER_TEMP
         )
-        heater_priority = AutoModeHeaterPriority([])
+        heater_priority = AutoModeHeaterPriority([], hysteresis)
         heater_priority.invoke(temp_config)
 
         new_statuses.assert_called_with(
@@ -169,7 +172,7 @@ class TestAutoModeHeaterPriority:
             co_temp=30.0,
             max_water_temp=MAX_WATER_TEMP
         )
-        heater_priority = AutoModeHeaterPriority([])
+        heater_priority = AutoModeHeaterPriority([], hysteresis)
         heater_priority.invoke(temp_config)
 
         new_statuses.assert_called_with(

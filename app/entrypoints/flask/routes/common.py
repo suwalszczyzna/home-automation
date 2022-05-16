@@ -52,12 +52,12 @@ def create_common_blueprint(
 
     @common.route("/hysteresis", methods=['GET'])
     def get_hysteresis():
-        return jsonify(hysteresis.get_hysteresis())
+        return jsonify(hysteresis.get_hysteresis().to_dict())
 
     @common.route("hysteresis", methods=['POST'])
     def update_hysteresis():
         data = json.loads(request.data)
-        return jsonify(hysteresis.update_hysteresis(data['status'], data['value']))
+        return jsonify(hysteresis.update_hysteresis(data['status'], data['value']).to_dict())
 
     return common
 

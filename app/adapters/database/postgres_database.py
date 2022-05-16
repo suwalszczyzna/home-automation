@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, MetaData, Column, Table, Text, Float, Date
 from sqlalchemy.dialects.postgresql import UUID
 
 import logger
-from app.domain.devices import Device, Status, TempConfig
+from app.domain.devices import Device, Status, TempConfig, Hysteresis
 from app.domain.interfaces.abstract_database import AbstractDatabase
 from app.domain.operation_modes import Operation
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Schedule, Weekday
@@ -359,24 +359,21 @@ class PostgresDB(AbstractDatabase):
             result = connection.execute(select)
             return [item[1] for item in result]
 
-    def get_hysteresis_status(self) -> bool:
+    def get_hysteresis(self) -> Hysteresis:
         with self.engine.begin() as connection:
-            select = hysteresis.select()
-            result = connection.execute(select).fetchone()
-            return result[1]
+            select = hysteresis.select().where(hysteresis.c.id == 1)
+            result = connection.execute(select)
+            return Hysteresis(
+                Status(result[1]),
+                result[2]
+            )
 
-    def set_hysteresis_status(self, status: bool) -> None:
+    def set_hysteresis_status(self, status: Status) -> None:
         with self.engine.begin() as connection:
-            update = hysteresis.update().where(hysteresis.c.id == 1).values(status=status)
+            update = hysteresis.update().where(hysteresis.c.id == 1).values(status=status.value)
             connection.execute(update)
 
-    def get_hysteresis_value(self) -> int:
-        with self.engine.begin() as connection:
-            select = hysteresis.select()
-            result = connection.execute(select).fetchone()
-            return result[2]
-
-    def update_hysteresis_value(self, value: int) -> None:
+    def set_hysteresis_value(self, value: int) -> None:
         with self.engine.begin() as connection:
             update = hysteresis.update().where(hysteresis.c.id == 1).values(value=value)
             connection.execute(update)

@@ -18,6 +18,7 @@ class InvokeOperationMode:
         operation = self._db.get_active_operation_mode()
         low_cost_schedules = self._db.get_low_cost_power_schedulers()
         temp_info = self._db.get_temp()
+        hysteresis = self._db.get_hysteresis()
 
         new_statuses = []
 
@@ -28,14 +29,14 @@ class InvokeOperationMode:
             check_schedule = self._db.get_checking_schedule_status(Operation.AUTO_MODE)
             log.info("Operation mode: check schedule: %s", check_schedule)
 
-            mode = AutoMode(low_cost_schedules)
+            mode = AutoMode(low_cost_schedules, hysteresis)
             new_statuses = mode.invoke(temp_info, check_schedule=check_schedule)
 
         elif operation == Operation.AUTO_MODE_HEATER:
             check_schedule = self._db.get_checking_schedule_status(Operation.AUTO_MODE_HEATER)
             log.info("Check schedule: %s", check_schedule)
 
-            mode = AutoModeHeaterPriority(low_cost_schedules)
+            mode = AutoModeHeaterPriority(low_cost_schedules, hysteresis)
             new_statuses = mode.invoke(temp_info, check_schedule=check_schedule)
 
         if new_statuses:

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.domain.devices import Device, Status, TempConfig
+from app.domain.devices import Device, Status, TempConfig, Hysteresis
 from app.domain.operation_modes import Operation
 from app.domain.schedulers import WaterHeatSchedule, LowerCostPower
 from app.domain.sensors import TempSensor
@@ -86,17 +86,13 @@ class AbstractDatabase(ABC):
         pass
 
     @abstractmethod
-    def get_hysteresis_status(self) -> bool:
+    def set_hysteresis_status(self, status: Status) -> None:
         pass
 
     @abstractmethod
-    def set_hysteresis_status(self, status: bool) -> None:
+    def get_hysteresis(self) -> Hysteresis:
         pass
 
     @abstractmethod
-    def get_hysteresis_value(self) -> int:
-        pass
-
-    @abstractmethod
-    def update_hysteresis_value(self, value: int) -> None:
+    def set_hysteresis_value(self, value: int) -> None:
         pass
