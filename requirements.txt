@@ -27,7 +27,6 @@ flower==1.0.0
 freezegun==1.1.0
 greenlet==1.1.2
 gunicorn==20.1.0
--e git+git@github.com:suwalszczyzna/home-automation.git@da853651ac6091d2a2c81c7d130e451bb3c36113#egg=home_automation
 humanize==4.0.0
 idna==3.3
 iniconfig==1.1.1
