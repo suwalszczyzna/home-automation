@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List
 
-from app.domain.devices import Devices, Status, NewDeviceStatus, TempConfig
+from app.domain.devices import Devices, Status, NewDeviceStatus, TempConfig, Hysteresis
 from app.domain.schedulers import LowerCostPower, check_schedulers
 
 
@@ -18,12 +18,10 @@ def new_statuses(new_valve_status: Status, new_water_heater_status: Status) -> L
     ]
 
 
-hysteresis = 9
-
-
 class OperationMode:
-    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
+    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower], hysteresis: Hysteresis):
         self.schedules = lower_cost_power_schedulers
+        self.hysteresis = hysteresis
 
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
         raise NotImplementedError
@@ -38,9 +36,6 @@ class OperationMode:
 
 
 class AutoMode(OperationMode):
-    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
-        super().__init__(lower_cost_power_schedulers)
-
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
 
         if temp_config.water_temp > temp_config.max_water_temp:
@@ -56,7 +51,7 @@ class AutoMode(OperationMode):
                     new_water_heater_status=Status.TURN_OFF
                 )
 
-            elif temp_config.water_temp < (temp_config.max_water_temp - hysteresis):
+            elif temp_config.water_temp < (temp_config.max_water_temp - self.hysteresis.abs_value):
                 return new_statuses(
                     new_valve_status=Status.TURN_OFF,
                     new_water_heater_status=self.heater_turn_on(check_schedule)
@@ -73,12 +68,8 @@ class AutoMode(OperationMode):
 
 
 class AutoModeHeaterPriority(OperationMode):
-
-    def __init__(self, lower_cost_power_schedulers: List[LowerCostPower]):
-        super().__init__(lower_cost_power_schedulers)
-
     def invoke(self, temp_config: TempConfig, check_schedule: bool = False) -> List[NewDeviceStatus]:
-        if temp_config.water_temp < (temp_config.max_water_temp - hysteresis):
+        if temp_config.water_temp < (temp_config.max_water_temp - self.hysteresis.abs_value):
             return new_statuses(
                 new_valve_status=Status.TURN_OFF,
                 new_water_heater_status=self.heater_turn_on(check_schedule)

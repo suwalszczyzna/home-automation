@@ -1,7 +1,7 @@
 from datetime import time
 from typing import List
 
-from app.domain.devices import Device, Status, TempConfig, CurrentPower
+from app.domain.devices import Device, Status, TempConfig, CurrentPower, Hysteresis
 from app.domain.operation_modes import Operation
 from app.domain.schedulers import LowerCostPower, WaterHeatSchedule, Weekday
 from app.domain.interfaces.abstract_database import AbstractDatabase
@@ -83,14 +83,11 @@ class FakeDatabase(AbstractDatabase):
     def get_chats(self) -> List[str]:
         return ['some-test-chat-id']
 
-    def get_hysteresis_status(self) -> bool:
-        return True
-
-    def set_hysteresis_status(self, status: bool) -> None:
+    def set_hysteresis_status(self, status: Status) -> None:
         pass
 
-    def get_hysteresis_value(self) -> int:
-        return 10
-
-    def update_hysteresis_value(self, value: int) -> None:
+    def set_hysteresis_value(self, value: int) -> None:
         pass
+
+    def get_hysteresis(self) -> Hysteresis:
+        return Hysteresis(Status.TURN_ON, 10)

@@ -54,3 +54,22 @@ class CurrentPower:
         return {
             'washer': self.washer
         }
+
+
+@dataclass
+class Hysteresis:
+    status: Status
+    value: int
+
+    def to_dict(self):
+        return {
+            "value": self.value,
+            "status": bool(self.status.value)
+        }
+
+    @property
+    def abs_value(self) -> int:
+        if self.status == Status.TURN_OFF:
+            return 0
+        else:
+            return self.value
