@@ -1,16 +1,25 @@
 import inject
+import json
+
 from flask import Blueprint, Response, jsonify, request
 
 from app.domain.actions.manage_operation_modes import ManageOperationModes
 from app.domain.actions.get_sensors_value import GetSensorsValue
 from app.domain.actions.send_notification import SendNotification
+from app.domain.actions.hysteresis import HysteresisActions
+
 
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
 
 @inject.autoparams()
-def create_common_blueprint(temp_actions: GetSensorsValue, manage_op: ManageOperationModes, notify: SendNotification) -> Blueprint:
+def create_common_blueprint(
+        temp_actions: GetSensorsValue,
+        manage_op: ManageOperationModes,
+        notify: SendNotification,
+        hysteresis: HysteresisActions) -> Blueprint:
+
     common = Blueprint("common", __name__)
 
     @common.route("/temperature")
@@ -40,4 +49,15 @@ def create_common_blueprint(temp_actions: GetSensorsValue, manage_op: ManageOper
     def send_notify() -> Response:
         notify.send_notification()
         return jsonify({"code": "OK"})
+
+    @common.route("/hysteresis", methods=['GET'])
+    def get_hysteresis():
+        return jsonify(hysteresis.get_hysteresis())
+
+    @common.route("hysteresis", methods=['POST'])
+    def update_hysteresis():
+        data = json.loads(request.data)
+        return jsonify(hysteresis.update_hysteresis(data['status'], data['value']))
+
     return common
+
