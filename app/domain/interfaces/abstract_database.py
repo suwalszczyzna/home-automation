@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.domain.devices import Device, Status, TempConfig, CurrentPower
+from app.domain.devices import Device, Status, TempConfig
 from app.domain.operation_modes import Operation
 from app.domain.schedulers import WaterHeatSchedule, LowerCostPower
 from app.domain.sensors import TempSensor
@@ -36,7 +36,7 @@ class AbstractDatabase(ABC):
     @abstractmethod
     def set_active_operation_mode(self, operation: Operation) -> None:
         pass
-    
+
     @abstractmethod
     def set_low_cost_checking(self, operation: Operation, value: bool) -> None:
         pass
@@ -78,9 +78,25 @@ class AbstractDatabase(ABC):
         pass
 
     @abstractmethod
-    def get_notifier_status(self, device_name:str) -> bool:
+    def get_notifier_status(self, device_name: str) -> bool:
         pass
 
     @abstractmethod
     def get_chats(self) -> List[str]:
+        pass
+
+    @abstractmethod
+    def get_hysteresis_status(self) -> bool:
+        pass
+
+    @abstractmethod
+    def set_hysteresis_status(self, status: bool) -> None:
+        pass
+
+    @abstractmethod
+    def get_hysteresis_value(self) -> int:
+        pass
+
+    @abstractmethod
+    def update_hysteresis_value(self, value: int) -> None:
         pass

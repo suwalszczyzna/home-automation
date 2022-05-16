@@ -9,6 +9,9 @@ from app.domain.sensors import TempSensor
 
 
 class FakeDatabase(AbstractDatabase):
+    def __init__(self, db_uri: str) -> None:
+        self.db_uri = db_uri
+
     def set_current_power(self, device_name: str, value: float) -> None:
         pass
 
@@ -42,9 +45,6 @@ class FakeDatabase(AbstractDatabase):
     def get_device_status(self, device_name: str) -> bool:
         return True
 
-    def __init__(self, db_uri: str) -> None:
-        self.db_uri = db_uri
-
     def get_temp(self) -> TempConfig:
         return TempConfig(
             max_water_temp=50,
@@ -73,3 +73,24 @@ class FakeDatabase(AbstractDatabase):
             local_key="d9839j98h",
             version="3.3"
         )
+
+    def set_notifier_status(self, device_name: str, value: bool) -> None:
+        pass
+
+    def get_notifier_status(self, device_name: str) -> bool:
+        return True
+
+    def get_chats(self) -> List[str]:
+        return ['some-test-chat-id']
+
+    def get_hysteresis_status(self) -> bool:
+        return True
+
+    def set_hysteresis_status(self, status: bool) -> None:
+        pass
+
+    def get_hysteresis_value(self) -> int:
+        return 10
+
+    def update_hysteresis_value(self, value: int) -> None:
+        pass

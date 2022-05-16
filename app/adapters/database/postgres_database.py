@@ -75,6 +75,12 @@ telegram = Table('telegram', metadata,
                  Column('chat_id', Text, nullable=False)
                  )
 
+hysteresis = Table('hysteresis', metadata,
+                   Column('id', Integer, primary_key=True),
+                   Column('status', Boolean, nullable=False),
+                   Column('value', Integer, nullable=False)
+                   )
+
 
 class PostgresDB(AbstractDatabase):
     def __init__(self, database_uri: str):
@@ -352,3 +358,25 @@ class PostgresDB(AbstractDatabase):
             select = telegram.select()
             result = connection.execute(select)
             return [item[1] for item in result]
+
+    def get_hysteresis_status(self) -> bool:
+        with self.engine.begin() as connection:
+            select = hysteresis.select()
+            result = connection.execute(select).fetchone()
+            return result[1]
+
+    def set_hysteresis_status(self, status: bool) -> None:
+        with self.engine.begin() as connection:
+            update = hysteresis.update().where(hysteresis.c.id == 1).values(status=status)
+            connection.execute(update)
+
+    def get_hysteresis_value(self) -> int:
+        with self.engine.begin() as connection:
+            select = hysteresis.select()
+            result = connection.execute(select).fetchone()
+            return result[2]
+
+    def update_hysteresis_value(self, value: int) -> None:
+        with self.engine.begin() as connection:
+            update = hysteresis.update().where(hysteresis.c.id == 1).values(value=value)
+            connection.execute(update)

@@ -1,4 +1,3 @@
-from webbrowser import Opera
 import inject
 
 from app.domain.interfaces.abstract_database import AbstractDatabase

@@ -6,6 +6,9 @@ log = logger.get_logger("DeviceEvent")
 
 
 class FakeAPI(AbstractDeviceAPI):
+    def get_device_switch_status(self, device: Device) -> Status:
+        return Status.TURN_ON
+
     def get_current_power(self, device: Device) -> float:
         return 0.0
 
