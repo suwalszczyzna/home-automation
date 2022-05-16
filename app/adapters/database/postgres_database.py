@@ -362,7 +362,7 @@ class PostgresDB(AbstractDatabase):
     def get_hysteresis(self) -> Hysteresis:
         with self.engine.begin() as connection:
             select = hysteresis.select().where(hysteresis.c.id == 1)
-            result = connection.execute(select)
+            result = connection.execute(select).fetchone()
             return Hysteresis(
                 Status(result[1]),
                 result[2]
